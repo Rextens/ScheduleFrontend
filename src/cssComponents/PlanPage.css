@@ -1,0 +1,23 @@
+.PlanMenu 
+{
+    background-color: red;
+}
+
+.PlanPill
+{
+    text-align: center;
+    background-color: rgb(186, 199, 0);
+    width: 11.4%;
+    height: 90%;
+    margin-right: 1%;
+}
+
+.PlanRow
+{
+    height: 100%;
+}
+
+.justc
+{
+    background-color: blueviolet;
+}
