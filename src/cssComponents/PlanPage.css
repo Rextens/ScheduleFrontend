@@ -17,7 +17,29 @@
     height: 100%;
 }
 
+.DragAndDropColumn
+{
+    background-color: cadetblue;
+}
+
 .justc
 {
     background-color: blueviolet;
+}
+
+.Subject
+{
+    background-color: blue;
+    height: 80px;
+    width: 100%;
+}
+
+.SubjectsList
+{
+    height: 100px;
+}
+
+.SubjectInput
+{
+    height: 200px;
 }

@@ -11,7 +11,7 @@ export default class Lesson extends Component {
 
     render() {
         return (
-            <Col sm={4} key={props.index} >
+            <Col sm={2} key={props.index} >
                 {
                     props.name
                 }

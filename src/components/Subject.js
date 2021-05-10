@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Col } from "react-bootstrap"
+import '../cssComponents/PlanPage.css'
 
 export default class Subject extends Component {
     constructor(props) {
@@ -12,7 +13,7 @@ export default class Subject extends Component {
 
     render() {
         return (
-            <Col sm={4} key={this.props.index} >
+            <Col sm={{span: 4, offset: 0.5}} key={this.props.index} className="Subject">
                 {
                     this.props.name
                 }

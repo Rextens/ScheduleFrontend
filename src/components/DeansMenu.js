@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Collapse, NavDropdown, Nav, Form, FormControl, Container, Row, Col } from "react-bootstrap"
+import { Button, Collapse, Dropdown, Nav, Form, FormControl, Container, Row, Col, NavItem } from "react-bootstrap"
 import { Navbar } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../cssComponents/PlanPage.css'
 import axios from 'axios'
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 import Subject from './Subject'
 
 export default class DeansMenu extends Component {
@@ -13,8 +14,7 @@ export default class DeansMenu extends Component {
 
         this.state = {
             redirectToLoginPage: false,
-            expandList: false,
-            subjects: []
+            menuOpen: false
         }
     }
 
@@ -36,57 +36,57 @@ export default class DeansMenu extends Component {
         })
     }
 
-    componentDidMount = () => {
-
-        axios.get('/getSubjects', {withCredentials: true}).then(result => {
-            this.setState({
-                subjects: result.data
-            }, () => {
-               console.log(this.state.subjects)
-            })
-        })
+    toggleDropdown = (event) => {
+        this.setState({menuOpen: !this.state.menuOpen})
     }
 
     render() {
         if(this.props.userType == 2)
         {
             return(
-                <div>
-                    <Button onClick={() => this.setState({expandList: !this.state.expandList})} 
-                        aria-controls="example-collapse-text"
-                        aria-expanded={this.state.expandList}> click </Button>
-                    
-                    <Collapse in={this.state.expandList}>
-                        <div id="example-collapse-text"  className="rtl">
-                                <Row noGutters={true}>
-                                    <Col sm={3} xs={12}>
-                                        <Form onSubmit={this.addSubject}>
-                                            <Form.Group>
-                                                <Form.Control placeholder="Subject Name"></Form.Control>
-                                            </Form.Group>
+                <Dropdown show={this.state.menuOpen}>
+                    <Dropdown.Toggle variant="success" id="dropdown-basic" onClick={this.toggleDropdown}>
+                        Dropdown Button
+                    </Dropdown.Toggle>
 
-                                            <Form.Group>
-                                                <Form.Control placeholder="Proffesor"></Form.Control>
-                                            </Form.Group>
-                                            <Button type="sumbmit">Add Subject!</Button>
-                                        </Form>
-                                    </Col>
-                                    <Col sm={9} xs={12}> 
-                                        <Container fluid={true}>
-                                            <Row>
-                                            {
-                                                this.state.subjects.map((item, index) => 
-                                                    
-                                                    <Subject name={item.name} index={index}/>
-                                                )    
+                    <Dropdown.Menu>
+                        <Form onSubmit={this.addSubject}>
+                            <Form.Group>
+                                <Form.Control placeholder="Subject Name"></Form.Control>
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Control placeholder="Proffesor"></Form.Control>
+                            </Form.Group>
+                            <Button type="sumbmit">Add Subject!</Button>
+                        </Form>
+
+                            <Droppable droppableId="subjects">
+                                {(provided) => (
+                                    <div className="subjects" {...provided.droppableProps} ref={provided.innerRef}>
+                                        {
+                                            this.props.subjects.map(({ID, name}, index) => {
+                                                return (
+                                                    <Draggable key={name} draggableId={`${ID}`} index={index}>
+                                                        {(provided) => (
+                                                            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                                                <div>
+                                                                    {
+                                                                        name
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </Draggable> 
+                                                    )
+                                                })
                                             }
-                                            </Row>
-                                        </Container>
-                                    </Col>
-                                </Row>
-                        </div>
-                    </Collapse>
-                </div>
+                                        {provided.placeholder}                           
+                                    </div>
+                                )}
+                            </Droppable>
+                    </Dropdown.Menu>
+                </Dropdown>
             )
         }
         else
