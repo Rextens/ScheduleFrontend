@@ -1,129 +1,49 @@
+import axios from 'axios'
 import React, { Component } from 'react'
 import { Draggable, Droppable } from 'react-beautiful-dnd'
-import { Col, Container, Row } from 'react-bootstrap'
+import { Col, Row, Button } from 'react-bootstrap'
 
 export default class DeansShedule extends Component {
+    
+    addSubjects = () => {
+        const subjects = {
+            friday: [],
+            saturday: [],
+            semester: this.props.planRef.state.chosenSemester,
+            group: this.props.planRef.state.chosenGroup
+        }
+
+        for(let i = 0; i < this.props.friday.length; ++i)
+        {
+            subjects.friday.push(this.props.friday[i].ID)
+        }
+
+        for(let i = 0; i < this.props.saturday.length; ++i)
+        {
+            subjects.saturday.push(this.props.saturday[i].ID)
+        }
+
+        axios.post('/addSubjectsToSemester', subjects, {withCredentials: true}).then(result => {
+            
+        })
+    }
+    
     render() {
         return (
                 <Row>
-                    <Col xs={2}>
-                        <Droppable droppableId="monday">
-                            {(provided) => (
-                                <div className="monday SubjectsList" {...provided.droppableProps} ref={provided.innerRef}>
-                                    {
-                                        this.props.monday.map(({ID, name}, index) => {
-                                            return (
-                                                <Draggable key={name} draggableId={`${ID}`} index={index}>
-                                                    {(provided) => (
-                                                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                                            <div>
-                                                                {
-                                                                    name
-                                                                }
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </Draggable> 
-                                                )
-                                            })
-                                    }
-                                    {provided.placeholder}                           
-                                </div>
-                            )}
-                        </Droppable>
+                    <Col xs={1}>
                     </Col>
-
-                    <Col xs={2}>
-                        <Droppable droppableId="tuesday">
-                            {(provided) => (
-                                <div className="tuesday SubjectsList" {...provided.droppableProps} ref={provided.innerRef}>
-                                    {
-                                        this.props.tuesday.map(({ID, name}, index) => {
-                                            return (
-                                                <Draggable key={name} draggableId={`${ID}`} index={index}>
-                                                    {(provided) => (
-                                                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                                            <div>
-                                                                {
-                                                                    name
-                                                                }
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </Draggable> 
-                                                )
-                                            })
-                                    }
-                                    {provided.placeholder}                           
-                                </div>
-                            )}
-                        </Droppable>
-                    </Col>
-
-                    <Col xs={2}>
-                        <Droppable droppableId="wednesday">
-                            {(provided) => (
-                                <div className="wednesday SubjectsList" {...provided.droppableProps} ref={provided.innerRef}>
-                                    {
-                                        this.props.wednesday.map(({ID, name}, index) => {
-                                            return (
-                                                <Draggable key={name} draggableId={`${ID}`} index={index}>
-                                                    {(provided) => (
-                                                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                                            <div>
-                                                                {
-                                                                    name
-                                                                }
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </Draggable> 
-                                                )
-                                            })
-                                    }
-                                    {provided.placeholder}                           
-                                </div>
-                            )}
-                        </Droppable>
-                    </Col>
-
-                    <Col xs={2}>
-                        <Droppable droppableId="thursday">
-                            {(provided) => (
-                                <div className="thursday SubjectsList" {...provided.droppableProps} ref={provided.innerRef}>
-                                    {
-                                        this.props.thursday.map(({ID, name}, index) => {
-                                            return (
-                                                <Draggable key={name} draggableId={`${ID}`} index={index}>
-                                                    {(provided) => (
-                                                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                                            <div>
-                                                                {
-                                                                    name
-                                                                }
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </Draggable> 
-                                                )
-                                            })
-                                    }
-                                    {provided.placeholder}                           
-                                </div>
-                            )}
-                        </Droppable>
-                    </Col>
-
-                    <Col xs={2}>
+                    
+                    <Col xs={5}>
                         <Droppable droppableId="friday">
                             {(provided) => (
                                 <div className="friday SubjectsList" {...provided.droppableProps} ref={provided.innerRef}>
                                     {
-                                        this.props.friday.map(({ID, name}, index) => {
+                                        this.props.friday.map(({dndID, name}, index) => {
                                             return (
-                                                <Draggable key={name} draggableId={`${ID}`} index={index}>
+                                                <Draggable key={`${dndID}`} draggableId={`${dndID}`} index={index}>
                                                     {(provided) => (
-                                                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                                        <div className="deansSubject" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                                             <div>
                                                                 {
                                                                     name
@@ -141,16 +61,19 @@ export default class DeansShedule extends Component {
                         </Droppable>
                     </Col>
 
-                    <Col xs={2}>
+                    <Col xs={1}>
+                    </Col>
+
+                    <Col xs={5}>
                         <Droppable droppableId="saturday">
                             {(provided) => (
                                 <div className="saturday SubjectsList" {...provided.droppableProps} ref={provided.innerRef}>
                                     {
-                                        this.props.saturday.map(({ID, name}, index) => {
+                                        this.props.saturday.map(({dndID, name}, index) => {
                                             return (
-                                                <Draggable key={name} draggableId={`${ID}`} index={index}>
+                                                <Draggable key={`${dndID}`} draggableId={`${dndID}`} index={index}>
                                                     {(provided) => (
-                                                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                                        <div className="deansSubject" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                                             <div>
                                                                 {
                                                                     name
@@ -166,6 +89,8 @@ export default class DeansShedule extends Component {
                                 </div>
                             )}
                         </Droppable>
+
+                        <Button onClick={this.addSubjects} id="addSubjectsButton">Dodaj przedmioty</Button>
                     </Col>
                 </Row>
         )

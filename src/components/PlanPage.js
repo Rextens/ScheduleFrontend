@@ -1,12 +1,10 @@
 import axios from 'axios'
 import React, { Component } from 'react'
-import { Button, Col, Container, Form, Row, Navbar, Nav, NavDropdown, FormControl, Collapse } from "react-bootstrap"
+import { Col, Container, Row } from "react-bootstrap"
 import { Redirect } from "react-router";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import "../cssComponents/PlanPage.css"
 import { DragDropContext } from 'react-beautiful-dnd';
-import DeansMenu from './DeansMenu';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
 import Topbar from './Topbar';
 import DeansShedule from './DeansShedule';
 
@@ -18,12 +16,12 @@ export default class PlanPage extends Component {
             redirectToLoginPage: false,
             userType: 0,
             subjects: [],
-            monday: [],
-            tuesday: [],
-            wednesday: [],
-            thursday: [],
             friday: [],
-            saturday: []
+            saturday: [],
+            semesters: [],
+            groups: [],
+            chosenSemester: '',
+            chosenGroup: ''
         }
 
         this.indexCounting = 0;
@@ -37,14 +35,38 @@ export default class PlanPage extends Component {
         axios.get('/getSubjects', {withCredentials: true}).then(result => {
             result.data.map((item, index) => {
                 let tempItem = item;
-                tempItem.ID = this.indexCounting;
-
-                ++this.indexCounting;
+                tempItem.dndID = this.indexCounting;
 
                 this.setState({
                     subjects: [...this.state.subjects, item]
+                }, () => {
+                     ++this.indexCounting;
                 })
             })
+        })
+
+        axios.get('/getGroups', {withCredentials: true}).then(result => {
+            this.setState({groups: result.data})
+        })
+
+        axios.get('/getSemesters', {withCredentials: true}).then(result => {
+            
+            this.setState({semesters: result.data})
+            
+            /*
+            result.data.map((item, index) => {
+
+                let startDate = new Date(item.startDate);
+                let endDate = new Date(item.endDate);
+
+                console.log(`${startDate.getFullYear()}/${startDate.getMonth() + 1}/${startDate.getDate()}`)
+                console.log(`${endDate.getFullYear()}/${endDate.getMonth() + 1}/${endDate.getDate()}`)
+
+                this.setState({
+                    semesters: [...this.state.semesters, item]
+                })
+            })
+            */
         })
     }
 
@@ -68,8 +90,6 @@ export default class PlanPage extends Component {
 
         this.setState({[source.droppableId]: tempSourceArray})
         this.setState({[destination.droppableId]: tempDestinationArray})
-
-        //this.setState({[source.droppableId]: })
     }
 
     onDragEnd(result) {
@@ -97,7 +117,7 @@ export default class PlanPage extends Component {
         else if(source.droppableId === "subjects")
         {
             let tempItem = { ...this.state.subjects[source.index] }
-            tempItem.ID = this.indexCounting;
+            tempItem.dndID = this.indexCounting;
 
             ++this.indexCounting;
 
@@ -120,21 +140,22 @@ export default class PlanPage extends Component {
         else
         {
             return (
-                <Container fluid={true} className="PlanRow">
-                    <DragDropContext onDragEnd={result => this.onDragEnd(result)}>
-                        <Topbar userType={this.state.userType} subjects={this.state.subjects} planRef={this}/>
-                        
-                        <Row>
-                            <Col xs={2}>
-                                
-                            </Col>
-                            <Col xs={10} className="DragAndDropColumn">
-                                <DeansShedule monday={this.state.monday} tuesday={this.state.tuesday} wednesday={this.state.wednesday} thursday={this.state.thursday} friday={this.state.friday} saturday={this.state.saturday}/>
-                            </Col>
-                        </Row>
-                        
-                    </DragDropContext>
-                </Container>
+                <DragDropContext onDragEnd={result => this.onDragEnd(result)}>
+                    <Topbar userType={this.state.userType} subjects={this.state.subjects} planRef={this}/>
+
+                    <Container fluid={true} className="PlanRow" className="Background">
+                            
+                            <Row noGutters={true}>
+                                <Col xs={2}>
+                                    
+                                </Col>
+                                <Col xs={10} className="DragAndDropColumn">
+                                    <DeansShedule friday={this.state.friday} saturday={this.state.saturday} planRef={this}/>
+                                </Col>
+                            </Row>
+                    </Container>
+                </DragDropContext>
+
             )       
         }
     }

@@ -28,17 +28,23 @@ export default class LoginPage extends Component {
         }
 
         axios.post('/login', loginData, {withCredentials: true}).then(result => {
+            console.log(result.data)
+
             if(result.data)
             {
-                this.setState({redirect: result.data})
+                this.setState({redirect: result.data.redirect, userType: result.data.userType})
             }
         })
     }
 
     render() {
-        if(this.state.redirect)
+        if(this.state.redirect && this.state.userType == 2)
         {
             return <Redirect to="/plan" />
+        }
+        else if(this.state.redirect && this.state.userType == 0)
+        {
+            return <Redirect to="/schedule" />
         }
         else
         {

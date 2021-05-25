@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { Button, Collapse, Dropdown, Nav, Form, FormControl, Container, Row, Col, NavItem } from "react-bootstrap"
-import { Navbar } from 'react-bootstrap'
+import { Button, Dropdown, Form } from "react-bootstrap"
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../cssComponents/PlanPage.css'
 import axios from 'axios'
 import { Droppable, Draggable } from 'react-beautiful-dnd';
-import Subject from './Subject'
+import TimeInput from 'react-time-input';
 
-export default class DeansMenu extends Component {
+export default class SubjectsMenu extends Component {
     constructor(props) {
         super(props)
 
@@ -16,20 +14,30 @@ export default class DeansMenu extends Component {
             redirectToLoginPage: false,
             menuOpen: false
         }
+
+        this.addSubjec = this.addSubject.bind(this);
     }
 
     addSubject = (input) => {
 
         input.preventDefault()
 
-        const subjectProps = {
-            subjectName: input.target[0].value,
-            proffesor: input.target[1].value
+        let ingredients = input.target[2].value.split(':')
+
+        let timeInMinutes = parseInt(ingredients[0]) * 60 + parseInt(ingredients[1])
+
+        let subjectProps = {
+            name: input.target[0].value,
+            proffesor: input.target[1].value,
+            subjectLength: timeInMinutes,
+            dndID: this.props.planRef.indexCounting
         }
 
         axios.post('/addSubject', subjectProps, {withCredentials: true}).then(result => {
-            this.setState({subjects: [...this.state.subjects, subjectProps]}, () => {
-                console.log(this.state.subjects)
+            subjectProps.ID = result.data
+
+            this.props.planRef.setState({subjects: [...this.props.subjects, subjectProps]}, () => {
+                this.props.planRef.indexCounting++;
             })
         }).then(() => {
             
@@ -46,7 +54,7 @@ export default class DeansMenu extends Component {
             return(
                 <Dropdown show={this.state.menuOpen}>
                     <Dropdown.Toggle variant="success" id="dropdown-basic" onClick={this.toggleDropdown}>
-                        Dropdown Button
+                        Przedmioty
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
@@ -58,18 +66,22 @@ export default class DeansMenu extends Component {
                             <Form.Group>
                                 <Form.Control placeholder="Proffesor"></Form.Control>
                             </Form.Group>
-                            <Button type="sumbmit">Add Subject!</Button>
+
+                            <TimeInput initTime='01:30'/>
+
+                            <Button type="sumbmit">Dodaj przedmiot!</Button>
                         </Form>
 
                             <Droppable droppableId="subjects">
                                 {(provided) => (
-                                    <div className="subjects" {...provided.droppableProps} ref={provided.innerRef}>
+                                    <div className="subjects" id="subjectsMenuList" {...provided.droppableProps} ref={provided.innerRef}>
                                         {
-                                            this.props.subjects.map(({ID, name}, index) => {
+                                            this.props.subjects.map(({dndID, name}, index) => {           
                                                 return (
-                                                    <Draggable key={name} draggableId={`${ID}`} index={index}>
-                                                        {(provided) => (
-                                                            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                                    <Draggable key={`${dndID}`} draggableId={`${dndID}`} index={index}>
+                                                        {
+                                                        (provided) => (
+                                                            <div className="deansSubject" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                                                 <div>
                                                                     {
                                                                         name
