@@ -127,9 +127,13 @@ export default class PlanPage extends Component {
         {
             this.swap(destination, source);
         }
-
-        console.log(result);
     }
+
+    getItemStyle = (newColor, draggableStyle) => ({
+        background: newColor,
+        
+        ...draggableStyle
+    })
 
     render() {
         

@@ -39,11 +39,11 @@ export default class DeansShedule extends Component {
                             {(provided) => (
                                 <div className="friday SubjectsList" {...provided.droppableProps} ref={provided.innerRef}>
                                     {
-                                        this.props.friday.map(({dndID, name}, index) => {
+                                        this.props.friday.map(({dndID, name, color}, index) => {
                                             return (
                                                 <Draggable key={`${dndID}`} draggableId={`${dndID}`} index={index}>
                                                     {(provided) => (
-                                                        <div className="deansSubject" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                                        <div className="deansSubject" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={this.props.planRef.getItemStyle(color, provided.draggableProps.style)}>
                                                             <div>
                                                                 {
                                                                     name
@@ -69,11 +69,11 @@ export default class DeansShedule extends Component {
                             {(provided) => (
                                 <div className="saturday SubjectsList" {...provided.droppableProps} ref={provided.innerRef}>
                                     {
-                                        this.props.saturday.map(({dndID, name}, index) => {
+                                        this.props.saturday.map(({dndID, name, color}, index) => {
                                             return (
                                                 <Draggable key={`${dndID}`} draggableId={`${dndID}`} index={index}>
                                                     {(provided) => (
-                                                        <div className="deansSubject" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                                        <div className="deansSubject" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={this.props.planRef.getItemStyle(color, provided.draggableProps.style)}>
                                                             <div>
                                                                 {
                                                                     name

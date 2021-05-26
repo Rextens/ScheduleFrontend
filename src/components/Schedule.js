@@ -27,7 +27,8 @@ export default class Schedule extends Component {
                 let tempConstruct = {
                     name: item.name,
                     proffessor: item.proffesor,
-                    subjectLength: item.subjectLength
+                    subjectLength: item.subjectLength,
+                    color: item.color
                 }
                 
                 if(item.isFriday)
@@ -59,7 +60,7 @@ export default class Schedule extends Component {
                         {
                             this.state.friday.map((item, index) => {
                                 return (
-                                    <div>
+                                    <div style={{background: item.color}}>
                                         {
                                             item.name
                                         }
@@ -73,7 +74,7 @@ export default class Schedule extends Component {
                         {
                             this.state.saturday.map((item, index) => {
                                 return (
-                                    <div>
+                                    <div style={{background: item.color}}>
                                         {
                                             item.name
                                         }
