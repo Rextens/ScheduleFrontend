@@ -3,9 +3,6 @@ import '../cssComponents/LoginPage.css'
 import { Button, Col, Container, Form, Row } from "react-bootstrap"
 import axios from 'axios'
 import { Redirect } from "react-router";
-import LoginContext from "../others/loginContext"
-
-const loginContext = 0;
 
 export default class LoginPage extends Component {
     constructor(props) {
@@ -28,8 +25,6 @@ export default class LoginPage extends Component {
         }
 
         axios.post('/login', loginData, {withCredentials: true}).then(result => {
-            console.log(result.data)
-
             if(result.data)
             {
                 this.setState({redirect: result.data.redirect, userType: result.data.userType})
@@ -42,7 +37,7 @@ export default class LoginPage extends Component {
         {
             return <Redirect to="/plan" />
         }
-        else if(this.state.redirect && this.state.userType == 0)
+        else if(this.state.redirect)
         {
             return <Redirect to="/schedule" />
         }

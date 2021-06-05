@@ -14,7 +14,7 @@ export default class PlanPage extends Component {
 
         this.state = {
             redirectToLoginPage: false,
-            userType: 0,
+            userType: -1,
             subjects: [],
             friday: [],
             saturday: [],
@@ -47,11 +47,28 @@ export default class PlanPage extends Component {
 
         axios.get('/getGroups', {withCredentials: true}).then(result => {
             this.setState({groups: result.data})
+
+            if(result.data.length > 0)
+            {
+                this.setState({chosenGroup: result.data[0].groupName})
+            }
         })
 
         axios.get('/getSemesters', {withCredentials: true}).then(result => {
             
             this.setState({semesters: result.data})
+
+            if(result.data.length > 0)
+            {
+                this.setState({chosenSemester: result.data[0].ID})
+            }
+
+            /*
+            if(result.data.length > 0)
+            {
+                this.setState({chosenSemester: result.data[0].groupName}, () => {console.log(this.state.chosenGroup)})
+            }
+            */
             
             /*
             result.data.map((item, index) => {
@@ -96,8 +113,6 @@ export default class PlanPage extends Component {
         // dropped outside the list
         const {destination, source} = result;
 
-        console.log(result)
-
         if (!result.destination) {
             return;
         }
@@ -136,10 +151,13 @@ export default class PlanPage extends Component {
     })
 
     render() {
-        
-        if(this.state.redirectToLoginPage)
+        if(this.state.redirectToLoginPage && this.state.userType == 1 || this.state.userType == 0)
         {
-            return <Redirect to="/" />
+            return <Redirect to="/schedule"/>
+        }
+        else if(this.state.redirectToLoginPage)
+        {
+            return <Redirect to="/"/>
         }
         else
         {

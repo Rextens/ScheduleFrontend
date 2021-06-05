@@ -5,6 +5,17 @@ import { Col, Row, Button } from 'react-bootstrap'
 
 export default class DeansShedule extends Component {
     
+    componentDidMount = () => {
+        const semesterAndGroup = {
+            semester: this.props.planRef.state.chosenSemester,
+            group: this.props.planRef.state.chosenGroup
+        }
+
+        axios.post('/loadSubjectsForDean', semesterAndGroup, {withCredentials: true}).then(result => {
+            console.log(result)
+        })
+    }
+
     addSubjects = () => {
         const subjects = {
             friday: [],

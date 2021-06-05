@@ -28,7 +28,45 @@ export default class GroupsMenu extends Component {
     }
 
     selectOption = (input) => {
-        this.props.planRef.setState({chosenGroup: input.target.value})
+        this.props.planRef.setState({chosenGroup: input.target.value}, () => {
+            const semesterAndGroup = {
+                semester: this.props.planRef.state.chosenSemester,
+                group: this.props.planRef.state.chosenGroup
+            }
+    
+            axios.post('/loadSubjectsForDean', semesterAndGroup, {withCredentials: true}).then(result => {
+                let tempFriday = []
+                let tempSaturday = []
+
+                console.log(result.data)
+
+                for(let i = 0; i < result.data.length; ++i)
+                {
+                    let tempSubject = {
+                        ID: result.data[i].ID,
+                        name: result.data[i].name,
+                        proffesor: result.data[i].proffesor,
+                        subjectLength: result.data[i].subjectLength,
+                        color: result.data[i].color,
+                        dndID: this.props.planRef.indexCounting
+                    }
+
+                    ++this.props.planRef.indexCounting
+
+                    if(result.data[i].isFriday)
+                    {
+                        tempFriday.push(tempSubject)
+                    }
+                    else
+                    {
+                        tempSaturday.push(tempSubject)
+                    }
+                }
+
+                this.props.planRef.setState({friday: tempFriday})
+                this.props.planRef.setState({saturday: tempSaturday})
+            })
+        })
     }
 
     render() {
