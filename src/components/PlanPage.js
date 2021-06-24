@@ -113,11 +113,23 @@ export default class PlanPage extends Component {
         // dropped outside the list
         const {destination, source} = result;
 
-        if (!result.destination) {
+        if(!result.destination)
+        {
+            if(result.source.droppableId !== "subjects")
+            {
+                this.state[source.droppableId].splice(source.index, 1);
+
+                this.setState({})
+            }
+            else
+            {
+                return
+            }
+        }
+        else if (result.destination.droppableId === "subjects") {
             return;
         }
-
-        if(destination.droppableId === source.droppableId)
+        else if(destination.droppableId === source.droppableId)
         {
             const subjects = this.reorder(
                 this.state[destination.droppableId],

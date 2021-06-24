@@ -19,8 +19,12 @@ export default class Schedule extends Component {
            fridayDate: new Date(),
            saturdayDate: new Date(),
            fridayNotes: new Map(),
-           saturdayNotes: new Map()
+           saturdayNotes: new Map(),
+           fridayLessonsHours: ['16.15', '18.00'],
+           saturdayLessonsHours: ['8.15', '10.00', '12.00', '13.45']
         }
+
+        this.subjectHeight = 75;
     }
 
     componentDidMount = () => {
@@ -36,27 +40,21 @@ export default class Schedule extends Component {
             
             this.state.fridayDate = tempFridayDate
             this.state.saturdayDate = tempSaturdayDate
-            //this.setState({saturdayDate: tempSaturdayDate,
-            //    fridayDate: tempFridayDate})
         }
         else if(today.getDay() == 5)
         {
             let tempSaturdayDate = new Date()
             tempSaturdayDate.setDate(today.getDate() + 1)
-            //this.setState({saturdayDate: tempSaturdayDate})
             this.state.saturdayDate = tempSaturdayDate
         }
         else if(today.getDay() == 6)
         {
             let tempFridayDate = new Date()
             tempFridayDate.setDate(today.getDate() - 1)
-            //this.setState({fridayDate: tempFridayDate})
             this.state.fridayDate = tempFridayDate
         }
 
         axios.get('/isLogged', {withCredentials: true}).then(result => {
-            //this.setState({redirectToLoginPage: result.data.redirect, userType: result.data.userType}, () => {
-
                 this.state.redirectToLoginPage = result.data.redirect
                 this.state.userType = result.data.userType
 
@@ -70,6 +68,9 @@ export default class Schedule extends Component {
                         console.log(result)
                         let tempFriday = []
                         let tempSaturday = []
+
+                        let lastFridayY = 0;
+                        let lastSaturdayY = 0;
                         
                         result.data.map((item, index) => {
                             let tempConstruct = {
@@ -82,16 +83,20 @@ export default class Schedule extends Component {
                             
                             if(item.isFriday)
                             {
+                                lastFridayY = item.subjectIndex * this.subjectHeight + this.subjectHeight + 40;
                                 tempFriday.push(tempConstruct)
                             }
                             else
                             {
+                                lastSaturdayY = item.subjectIndex * this.subjectHeight + this.subjectHeight + 40;
                                 tempSaturday.push(tempConstruct)
                             }
                         })
     
-                        this.setState({friday: tempFriday})
-                        this.setState({saturday: tempSaturday})
+                        this.setState({friday: tempFriday,  
+                                        saturday: tempSaturday,
+                                        fridayY: lastFridayY,
+                                        saturdayY: lastSaturdayY})
                     })
                 }
                 else if(this.state.userType == 1)
@@ -116,12 +121,12 @@ export default class Schedule extends Component {
                             
                             if(item.isFriday)
                             {
-                                lastFridayY = item.subjectIndex * 50 + 50;
+                                lastFridayY = item.subjectIndex * this.subjectHeight + this.subjectHeight + 40;
                                 tempFriday.push(tempConstruct)
                             }
                             else
                             {
-                                lastSaturdayY = item.subjectIndex * 50  + 50;
+                                lastSaturdayY = item.subjectIndex * this.subjectHeight + this.subjectHeight + 40;
                                 tempSaturday.push(tempConstruct)
                             }
                         })
@@ -130,13 +135,6 @@ export default class Schedule extends Component {
                                         saturday: tempSaturday,
                                         fridayY: lastFridayY,
                                         saturdayY: lastSaturdayY})
-                        
-                       /*
-                        this.state.friday = tempFriday,
-                        this.state.saturdayY = tempSaturday,
-                        this.state.fridayY = lastFridayY,
-                        this.state.saturdayY = lastSaturdayY
-                            */
                     })
                 }
 
@@ -146,7 +144,7 @@ export default class Schedule extends Component {
     }
 
     translateSubjectToProperPosition = (itemIndex) => {
-        return itemIndex * 50;
+        return itemIndex * this.subjectHeight;
     }
 
     subDate = () => {
@@ -154,8 +152,6 @@ export default class Schedule extends Component {
         this.state.saturdayDate.setDate(this.state.saturdayDate.getDate() - 7)
 
         this.loadNotes();
-
-        //this.setState({})
     }
 
     addDate = () => {
@@ -163,8 +159,6 @@ export default class Schedule extends Component {
         this.state.saturdayDate.setDate(this.state.saturdayDate.getDate() + 7)
 
         this.loadNotes();
-
-        //this.setState({})
     }
 
     loadNotes = () => {
@@ -199,7 +193,6 @@ export default class Schedule extends Component {
             itemIndex: itemIndexArg
         }
 
-        //care for month is starting from 0, not from 1
         if(checkIsFriday)
         {
             noteData.chosenDate = this.state.fridayDate.toJSON().slice(0, 10).replace('T', ' ')
@@ -277,15 +270,30 @@ export default class Schedule extends Component {
                                 this.state.friday.map((item, index) => {
                                     console.log(item)
 
-                                    return (                          
-                                        <div className="Subject" style={{background: item.color, transform: `translateY(${this.translateSubjectToProperPosition(item.subjectIndex)}px)`}}>
-                                            <Popup trigger={<div className="PopupButtonContainer">{item.name}</div>} modal>
-                                                <div customvalue="abc" className="SubjectPopup">
-                                                    {
-                                                        this.letInput(1, item.subjectIndex)
-                                                    }
-                                                </div>
-                                            </Popup>
+                                    return (          
+                                        <div style={{transform: `translateY(${this.translateSubjectToProperPosition(item.subjectIndex)}px)`, justifyContent: 'content', flexDirection: 'row', display: 'flex'}}> 
+                                        {
+                                            this.state.fridayLessonsHours[item.subjectIndex]
+                                        }     
+                                            <div className="Subject" style={{background: item.color}}>
+                                                <Popup trigger={
+                                                    <div className="PopupButtonContainer">
+                                                        {
+                                                            `${item.name}`
+                                                        }
+                                                        <br/>
+                                                        {
+                                                            `${item.proffessor}`
+                                                        }
+                                                    </div>} modal>
+                                                    
+                                                    <div customvalue="abc" className="SubjectPopup">
+                                                        {
+                                                            this.letInput(1, item.subjectIndex)
+                                                        }
+                                                    </div>
+                                                </Popup>
+                                            </div>
                                         </div>                                        
                                     )
                                 })
@@ -299,14 +307,29 @@ export default class Schedule extends Component {
                             {
                                 this.state.saturday.map((item, index) => {
                                     return (
-                                        <div className="Subject" style={{background: item.color, transform: `translateY(${this.translateSubjectToProperPosition(item.subjectIndex)}px)`}}>                                        
-                                            <Popup trigger={<div className="PopupButtonContainer">{item.name}</div>} modal>
-                                                <div className="SubjectPopup">
-                                                    {
-                                                        this.letInput(0, item.subjectIndex)
-                                                    }
-                                                </div>
-                                            </Popup>
+                                        <div style={{transform: `translateY(${this.translateSubjectToProperPosition(item.subjectIndex)}px)`, justifyContent: 'content', flexDirection: 'row', display: 'flex'}}> 
+                                        {
+                                            this.state.saturdayLessonsHours[item.subjectIndex]
+                                        }
+                                            <div className="Subject" style={{background: item.color}}>                                        
+                                                <Popup trigger={
+                                                    <div className="PopupButtonContainer">
+                                                        {
+                                                            item.name
+                                                        }
+                                                        <br/>
+                                                        {
+                                                            `${item.proffessor}`
+                                                        }                              
+                                                    </div>} modal>
+                                                    
+                                                    <div className="SubjectPopup">
+                                                        {
+                                                            this.letInput(0, item.subjectIndex)
+                                                        }
+                                                    </div>
+                                                </Popup>
+                                            </div>
                                         </div>
                                     )
                                 })                            
