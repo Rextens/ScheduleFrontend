@@ -1,4 +1,5 @@
 import { Component } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../cssComponents/LoginPage.css'
 import { Button, Col, Container, Form, Row } from "react-bootstrap"
 import axios from 'axios'
@@ -46,18 +47,20 @@ export default class LoginPage extends Component {
             return (
                 <div className="Test">
                     <Container fluid={true}>
-                        <Col className="LoginField">
-                            <Form onSubmit={this.login}>
-                                <Form.Group>
-                                    <Form.Control placeholder="Index"></Form.Control>
-                                </Form.Group>
+                        <Row>
+                            <Col className="LoginField">
+                                <Form onSubmit={this.login}>
+                                    <Form.Group>
+                                        <Form.Control bsPrefix="dataInput" placeholder="Index"></Form.Control>
+                                    </Form.Group>
 
-                                <Form.Group>
-                                    <Form.Control placeholder="Password" type="Password"></Form.Control>
-                                </Form.Group>
-                                <Button type="sumbmit">Login!</Button>
-                            </Form>                    
-                        </Col>
+                                    <Form.Group>
+                                        <Form.Control bsPrefix="dataInput" placeholder="Password" type="Password"></Form.Control>
+                                    </Form.Group>
+                                    <Button bsPrefix="submitButton" type="sumbmit">Login!</Button>
+                                </Form>                    
+                            </Col>
+                        </Row>
                     </Container>
                 </div>
             );

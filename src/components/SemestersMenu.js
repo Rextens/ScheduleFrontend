@@ -42,8 +42,6 @@ export default class SemestersMenu extends Component {
                 let tempFriday = []
                 let tempSaturday = []
 
-                console.log(result.data)
-
                 for(let i = 0; i < result.data.length; ++i)
                 {
                     let tempSubject = {

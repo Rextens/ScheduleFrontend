@@ -252,28 +252,36 @@ export default class Schedule extends Component {
         else
         {
             return (
-                <Container fluid={true} className="PlanRow" className="Background">        
-                    <Row>
-                        <Col xs={{span: 10, offset: 2}}>
-                            <Button style={{float: 'left'}} onClick={this.subDate}>Poprzedni</Button> 
-                            
-                            <Button style={{float: 'right'}} onClick={this.addDate}>Następny</Button>
+                <Container fluid={true} className="PlanRow" className="Background"> 
+                    <Row bsPrefix="chooseDateBar row" noGutters={true}>
+                        <Col xs={{span: 5}} md={{span: 5, offset: 2}}>
+                            <Button bsPrefix="changeDatePrevious" style={{float: 'left'}} onClick={this.subDate}>Poprzedni</Button> 
+                        </Col>
+
+                        <Col xs={{span: 5}} md={{span: 5}}>
+                            <Button bsPrefix="changeDateNext" style={{float: 'left'}} onClick={this.addDate}>Następny</Button>
                         </Col>
                     </Row>
                     
                     <Row noGutters={true}>
-                        <Col xs={{span: 10, offset: 2}} md={{span: 5, offset: 2}} style={{position: 'relative', height: `${this.state.fridayY + 40}px`}}>                           
-                            {
-                                `Piątek: ${this.state.fridayDate.getFullYear()}/${this.state.fridayDate.getMonth() + 1}/${this.state.fridayDate.getDate()}`
+                        <Col xs={{span: 10, offset: 0}} md={{span: 5, offset: 2}} style={{position: 'relative', height: `${this.state.fridayY + 40}px`}}>                           
+                            { 
+                                <div style={{marginBottom: 20}}>
+                                {
+                                    `Piątek: ${this.state.fridayDate.getFullYear()}/${this.state.fridayDate.getMonth() + 1}/${this.state.fridayDate.getDate()}`
+                                }
+                                </div>
                             }
                             {
                                 this.state.friday.map((item, index) => {
-                                    console.log(item)
-
                                     return (          
                                         <div style={{transform: `translateY(${this.translateSubjectToProperPosition(item.subjectIndex)}px)`, justifyContent: 'content', flexDirection: 'row', display: 'flex'}}> 
-                                        {
-                                            this.state.fridayLessonsHours[item.subjectIndex]
+                                        {   
+                                            <div style={{transform: `translateX(30px)`}}>
+                                            {
+                                                this.state.fridayLessonsHours[item.subjectIndex]
+                                            }       
+                                            </div>
                                         }     
                                             <div className="Subject" style={{background: item.color}}>
                                                 <Popup trigger={
@@ -287,11 +295,13 @@ export default class Schedule extends Component {
                                                         }
                                                     </div>} modal>
                                                     
+                                                    <div className="overlay"/>
                                                     <div customvalue="abc" className="SubjectPopup">
                                                         {
                                                             this.letInput(1, item.subjectIndex)
                                                         }
                                                     </div>
+                                                    
                                                 </Popup>
                                             </div>
                                         </div>                                        
@@ -300,16 +310,24 @@ export default class Schedule extends Component {
                             }
                         </Col>
 
-                        <Col xs={{span: 10, offset: 2}} md={{span: 5, offset: 0}} style={{position: 'relative', height: `${this.state.saturdayY + 40}px`}}>                          
+                        <Col xs={{span: 10, offset: 0}} md={{span: 5, offset: 0}} style={{position: 'relative', height: `${this.state.saturdayY + 40}px`}}>                          
                             {
-                                `Sobota: ${this.state.saturdayDate.getFullYear()}/${this.state.saturdayDate.getMonth() + 1}/${this.state.saturdayDate.getDate()}`
+                                <div style={{marginBottom: 20}}>
+                                {
+                                    `Sobota: ${this.state.saturdayDate.getFullYear()}/${this.state.saturdayDate.getMonth() + 1}/${this.state.saturdayDate.getDate()}`
+                                }
+                                </div>
                             }
                             {
                                 this.state.saturday.map((item, index) => {
                                     return (
                                         <div style={{transform: `translateY(${this.translateSubjectToProperPosition(item.subjectIndex)}px)`, justifyContent: 'content', flexDirection: 'row', display: 'flex'}}> 
                                         {
-                                            this.state.saturdayLessonsHours[item.subjectIndex]
+                                            <div style={{transform: `translateX(30px)`}}>
+                                            {
+                                                this.state.saturdayLessonsHours[item.subjectIndex]
+                                            }       
+                                            </div>
                                         }
                                             <div className="Subject" style={{background: item.color}}>                                        
                                                 <Popup trigger={
@@ -323,6 +341,7 @@ export default class Schedule extends Component {
                                                         }                              
                                                     </div>} modal>
                                                     
+                                                    <div className="overlay"/>
                                                     <div className="SubjectPopup">
                                                         {
                                                             this.letInput(0, item.subjectIndex)

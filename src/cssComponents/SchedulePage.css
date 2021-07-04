@@ -7,23 +7,92 @@
     text-align: center;
     max-width: 80%;
     transform: translateX(80px);
+    box-shadow: 1px 2px 3px rgb(0, 0, 0);
+}
+
+.chooseDateBar
+{
+    margin-bottom: 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+
+@media only screen and (min-width: 767px) {
+    .changeDateNext
+    {
+        transform: translateX(80px);
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .changeDateNext
+    {
+        transform: translateX(60px);
+    }
+}
+
+.changeDatePrevious
+{
+    transform: translateX(80px);
+    min-width: 100px;
+}
+
+.changeDateNext
+{
+    min-width: 100px;
 }
 
 .PopupButtonContainer
 {
     width: 100%;
     height: 100%;
+    user-select: none
 }
+
+@keyframes anvil {
+    0% {
+      transform: scale(1) translateY(0px);
+      opacity: 0;
+      box-shadow: 0 0 0 rgba(241, 241, 241, 0);
+    }
+    1% {
+      transform: scale(0.96) translateY(10px);
+      opacity: 0;
+      box-shadow: 0 0 0 rgba(241, 241, 241, 0);
+    }
+    100% {
+      transform: scale(1) translateY(0px);
+      opacity: 1;
+      box-shadow: 0 0 500px rgba(241, 241, 241, 0);
+    }
+  }
 
 .SubjectPopup
 {
+    z-index: 100;
+    animation: anvil 0.3s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
     height: 80vh;
     width: 80vh;
-    background-color: red;
+    background-color: rgb(51, 51, 51);
+    color: white;
+}
+
+.overlay
+{
+    position: absolute;
+    background: rgba(0, 0, 0, 0.445);
+    width: 1000vw;
+    height: 1000vh;
+    transform: translate(-50%, -50%);   
+    pointer-events: none; 
 }
 
 .Background
 {
     min-height: 100vh;
     height: max-content;
+    background-color: rgb(24, 26, 27);
+    color: white;
 }
