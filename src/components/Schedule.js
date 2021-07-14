@@ -255,11 +255,11 @@ export default class Schedule extends Component {
                 <Container fluid={true} className="PlanRow" className="Background"> 
                     <Row bsPrefix="chooseDateBar row" noGutters={true}>
                         <Col xs={{span: 5}} md={{span: 5, offset: 2}}>
-                            <Button bsPrefix="changeDatePrevious" style={{float: 'left'}} onClick={this.subDate}>Poprzedni</Button> 
+                            <Button bsPrefix="changeDatePrevious toggleButton" style={{float: 'left'}} onClick={this.subDate}>Poprzedni</Button> 
                         </Col>
 
                         <Col xs={{span: 5}} md={{span: 5}}>
-                            <Button bsPrefix="changeDateNext" style={{float: 'left'}} onClick={this.addDate}>Następny</Button>
+                            <Button bsPrefix="changeDateNext toggleButton" style={{float: 'left'}} onClick={this.addDate}>Następny</Button>
                         </Col>
                     </Row>
                     

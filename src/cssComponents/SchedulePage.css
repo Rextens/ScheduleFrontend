@@ -37,11 +37,13 @@
 {
     transform: translateX(80px);
     min-width: 100px;
+    min-height: 45px;
 }
 
 .changeDateNext
 {
     min-width: 100px;
+    min-height: 45px;
 }
 
 .PopupButtonContainer

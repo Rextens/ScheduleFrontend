@@ -39,7 +39,10 @@
 {
     /*background-color: coral;*/
     margin-bottom: 10px;
+    height: 40px;    
     text-align: center;
+    align-items: center;
+    justify-content: center;
     -webkit-touch-callout: none; 
     -webkit-user-select: none;
     -khtml-user-select: none; 
@@ -50,12 +53,16 @@
 
 #addSubjectsButton
 {
+    min-width: 100px;
+    min-height: 45px;
+    margin-top: 10px;
     float: right;
 }
 
 .SubjectsList
 {
-    background-color: rgb(206, 206, 206);
+    background-color: rgb(105, 105, 105);
+    box-shadow: 1px 2px 3px rgb(0, 0, 0);
     height: 500px;
 }
 
@@ -74,4 +81,58 @@
 .bhg
 {
     width: 100%;
+}
+
+@media only screen and (max-width: 768px) {
+    .toggleButton
+    {
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+}
+
+.toggleButton
+{
+    min-width: 100px;
+    min-height: 45px;
+    margin-right: 20px;
+    background-color: rgb(56, 56, 56);
+    border: 2px solid rgb(0, 0, 0);
+    color: chartreuse;
+    border-radius: 0px;
+}
+
+.toggleButton:hover
+{
+    background-color: rgb(29, 29, 29);
+    color: chartreuse;
+    text-shadow: 0px 0px 3px chartreuse;
+    border: 2px solid chartreuse;
+}
+
+.toggleButton:focus
+{
+    min-width: 100px;
+    margin-right: 20px;
+    background-color: rgb(56, 56, 56);
+    border: 2px solid rgb(0, 0, 0);
+    color: chartreuse;
+    box-shadow: none;
+}
+
+.toggleButton:active
+{
+    
+}
+
+.marginsForSubjectButton
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.dropdownMenu
+{
+    background-color: rgb(105, 105, 105);         
+    
 }

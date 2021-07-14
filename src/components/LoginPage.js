@@ -49,7 +49,7 @@ export default class LoginPage extends Component {
                     <Container fluid={true}>
                         <Row>
                             <Col className="LoginField">
-                                <Form onSubmit={this.login}>
+                                <Form onSubmit={this.login} className="LoginForm">
                                     <Form.Group>
                                         <Form.Control bsPrefix="dataInput" placeholder="Index"></Form.Control>
                                     </Form.Group>
@@ -57,7 +57,7 @@ export default class LoginPage extends Component {
                                     <Form.Group>
                                         <Form.Control bsPrefix="dataInput" placeholder="Password" type="Password"></Form.Control>
                                     </Form.Group>
-                                    <Button bsPrefix="submitButton" type="sumbmit">Login!</Button>
+                                    <Button bsPrefix="LoginButton" type="sumbmit">Login!</Button>
                                 </Form>                    
                             </Col>
                         </Row>

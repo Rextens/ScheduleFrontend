@@ -22,7 +22,12 @@ body
     text-align: center;
 }
 
-form 
+.dataInput:focus
+{
+    border: 2px solid rgb(0, 255, 55);
+}
+
+.LoginForm
 {
     min-width: 300px;
     position: absolute;
@@ -36,7 +41,7 @@ form
     align-items: center;
 }
 
-button
+.LoginButton
 {
     border: 2px solid rgb(179, 179, 179);
     background-color: rgb(43, 46, 48);

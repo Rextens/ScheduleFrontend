@@ -10,7 +10,6 @@ export default class Topbar extends Component {
     }
 
     render() {
-
         return (
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Dropdown, Form } from "react-bootstrap"
 import 'bootstrap/dist/css/bootstrap.min.css'
-import '../cssComponents/PlanPage.css'
+import '../../cssComponents/PlanPage.css'
 import axios from 'axios'
 import reactCSS from 'reactcss'
 import { Droppable, Draggable } from 'react-beautiful-dnd';
@@ -100,18 +100,18 @@ export default class SubjectsMenu extends Component {
         {
             return(
                 <Dropdown show={this.state.menuOpen}>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic" onClick={this.toggleDropdown}>
+                    <Dropdown.Toggle bsPrefix="toggleButton" variant="none" id="dropdown-basic" onClick={this.toggleDropdown}>
                         Przedmioty
                     </Dropdown.Toggle>
 
-                    <Dropdown.Menu>
+                    <Dropdown.Menu bsPrefix="dropdownMenu dropdown-menu">
                         <Form onSubmit={this.addSubject}>
                             <Form.Group>
-                                <Form.Control placeholder="Subject Name"></Form.Control>
+                                <Form.Control bsPrefix="dataInput" placeholder="Subject Name"></Form.Control>
                             </Form.Group>
 
                             <Form.Group>
-                                <Form.Control placeholder="Proffesor"></Form.Control>
+                                <Form.Control bsPrefix="dataInput" placeholder="Proffesor"></Form.Control>
                             </Form.Group>
 
                             <div style={ styles.swatch } onClick={ this.hideColorPicker } className="bhg">
@@ -127,7 +127,7 @@ export default class SubjectsMenu extends Component {
 
                             <TimeInput initTime='01:30'/>
 
-                            <Button type="sumbmit">Dodaj przedmiot!</Button>
+                            <Button className="toggleButton marginsForSubjectButton" type="sumbmit">Dodaj przedmiot!</Button>
                         </Form>
 
                             <Droppable droppableId="subjects">

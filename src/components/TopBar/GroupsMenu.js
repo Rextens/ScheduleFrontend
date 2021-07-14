@@ -1,38 +1,33 @@
-import DatePicker from "react-datepicker"
 import React, { Component } from 'react'
 import { Dropdown, Form, Button} from "react-bootstrap"
 import axios from 'axios'
 import "react-datepicker/dist/react-datepicker.css";
 
-export default class SemestersMenu extends Component {
+export default class GroupsMenu extends Component {
 
     constructor(props) {
         super(props)
 
         this.state = {
-            startDate: new Date(),
-            endDate: new Date(),
-            selectedSemester: ""
+
+            selectedGroup: ""
         }
     }
 
-    addSemester = (input) => {
+    addGroup = (input) => {
         input.preventDefault()
 
-        let semesterData = {
-            startDate: input.target[0].value,
-            endDate: input.target[1].value
+        const groupData = {
+            group: input.target[0].value
         }
 
-        axios.post('/addSemester', semesterData, {withCredentials: true}).then(result => {
-            semesterData.ID = result.data
-
-            this.props.planRef.setState({semesters: [...this.props.semesters, semesterData]})
+        axios.post('/addGroups', groupData, {withCredentials: true}).then(result => {
+            this.props.planRef.setState({groups: [...this.props.groups, groupData]})
         })
     }
 
     selectOption = (input) => {
-        this.props.planRef.setState({chosenSemester: input.target.value}, () => {
+        this.props.planRef.setState({chosenGroup: input.target.value}, () => {
             const semesterAndGroup = {
                 semester: this.props.planRef.state.chosenSemester,
                 group: this.props.planRef.state.chosenGroup
@@ -41,6 +36,8 @@ export default class SemestersMenu extends Component {
             axios.post('/loadSubjectsForDean', semesterAndGroup, {withCredentials: true}).then(result => {
                 let tempFriday = []
                 let tempSaturday = []
+
+                console.log(result.data)
 
                 for(let i = 0; i < result.data.length; ++i)
                 {
@@ -76,25 +73,26 @@ export default class SemestersMenu extends Component {
         {
             return (
                 <Dropdown>
-                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                            Semestry
+                        <Dropdown.Toggle bsPrefix="toggleButton" variant="none" id="dropdown-basic">
+                            Grupy
                         </Dropdown.Toggle>
 
-                        <Dropdown.Menu>
-                            <Form onSubmit={this.addSemester}>
-                                <DatePicker selected={this.state.startDate} onChange={date => this.setState({startDate: date})} dateFormat="yyyy/MM/dd"/>
-                                <DatePicker selected={this.state.endDate} onChange={date => this.setState({endDate: date})} dateFormat="yyyy/MM/dd"/>
+                        <Dropdown.Menu bsPrefix="dropdown-menu dropdownMenu">
+                            <Form onSubmit={this.addGroup}>
+                                <Form.Group>
+                                    <Form.Control bsPrefix="dataInput" placeholder="Nazwa grupy"></Form.Control>
+                                </Form.Group>
 
-                                <Button type="sumbmit">Dodaj Semestr!</Button>
+                                <Button bsPrefix="toggleButton marginsForSubjectButton" type="sumbmit">Dodaj Grupę!</Button>
                             </Form>
 
                             <select onChange={this.selectOption}>
                                 {
-                                    this.props.semesters.map((item, index) => {
+                                    this.props.groups.map((item, index) => {
                                         return(
-                                            <option value={`${item.ID}`} key={`${item.ID}`}>
+                                            <option value={`${item.group}`} key={`${item.group}`}>
                                                 {
-                                                    item.ID
+                                                    item.group
                                                 }
                                             </option>
                                         )

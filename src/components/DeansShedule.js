@@ -101,7 +101,7 @@ export default class DeansShedule extends Component {
                             )}
                         </Droppable>
 
-                        <Button onClick={this.addSubjects} id="addSubjectsButton">Dodaj przedmioty</Button>
+                        <Button onClick={this.addSubjects} bsPrefix="toggleButton" id="addSubjectsButton">Dodaj przedmioty</Button>
                     </Col>
                 </Row>
         )

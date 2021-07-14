@@ -5,7 +5,7 @@ import { Redirect } from "react-router";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import "../cssComponents/PlanPage.css"
 import { DragDropContext } from 'react-beautiful-dnd';
-import Topbar from './Topbar';
+import Topbar from './TopBar/Topbar';
 import DeansShedule from './DeansShedule';
 
 export default class PlanPage extends Component {
@@ -50,7 +50,7 @@ export default class PlanPage extends Component {
 
             if(result.data.length > 0)
             {
-                this.setState({chosenGroup: result.data[0].groupName})
+                this.setState({chosenGroup: result.data[0].group})
             }
         })
 

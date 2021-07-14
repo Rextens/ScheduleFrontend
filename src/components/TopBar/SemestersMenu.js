@@ -4,31 +4,35 @@ import { Dropdown, Form, Button} from "react-bootstrap"
 import axios from 'axios'
 import "react-datepicker/dist/react-datepicker.css";
 
-export default class GroupsMenu extends Component {
+export default class SemestersMenu extends Component {
 
     constructor(props) {
         super(props)
 
         this.state = {
-
-            selectedGroup: ""
+            startDate: new Date(),
+            endDate: new Date(),
+            selectedSemester: ""
         }
     }
 
-    addGroup = (input) => {
+    addSemester = (input) => {
         input.preventDefault()
 
-        const groupData = {
-            groupName: input.target[0].value
+        let semesterData = {
+            startDate: input.target[0].value,
+            endDate: input.target[1].value
         }
 
-        axios.post('/addGroups', groupData, {withCredentials: true}).then(result => {
-            this.props.planRef.setState({groups: [...this.props.groups, groupData]})
+        axios.post('/addSemester', semesterData, {withCredentials: true}).then(result => {
+            semesterData.ID = result.data
+
+            this.props.planRef.setState({semesters: [...this.props.semesters, semesterData]})
         })
     }
 
     selectOption = (input) => {
-        this.props.planRef.setState({chosenGroup: input.target.value}, () => {
+        this.props.planRef.setState({chosenSemester: input.target.value}, () => {
             const semesterAndGroup = {
                 semester: this.props.planRef.state.chosenSemester,
                 group: this.props.planRef.state.chosenGroup
@@ -37,8 +41,6 @@ export default class GroupsMenu extends Component {
             axios.post('/loadSubjectsForDean', semesterAndGroup, {withCredentials: true}).then(result => {
                 let tempFriday = []
                 let tempSaturday = []
-
-                console.log(result.data)
 
                 for(let i = 0; i < result.data.length; ++i)
                 {
@@ -74,26 +76,25 @@ export default class GroupsMenu extends Component {
         {
             return (
                 <Dropdown>
-                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                            Grupy
+                        <Dropdown.Toggle bsPrefix="toggleButton" variant="none" id="dropdown-basic">
+                            Semestry
                         </Dropdown.Toggle>
 
-                        <Dropdown.Menu>
-                            <Form onSubmit={this.addGroup}>
-                                <Form.Group>
-                                    <Form.Control placeholder="Nazwa grupy"></Form.Control>
-                                </Form.Group>
+                        <Dropdown.Menu bsPrefix="dropdown-menu dropdownMenu">
+                            <Form onSubmit={this.addSemester}>
+                                <DatePicker selected={this.state.startDate} onChange={date => this.setState({startDate: date})} dateFormat="yyyy/MM/dd"/>
+                                <DatePicker selected={this.state.endDate} onChange={date => this.setState({endDate: date})} dateFormat="yyyy/MM/dd"/>
 
-                                <Button type="sumbmit">Dodaj Grupę!</Button>
+                                <Button bsPrefix="toggleButton marginsForSubjectButton" type="sumbmit">Dodaj Semestr!</Button>
                             </Form>
 
                             <select onChange={this.selectOption}>
                                 {
-                                    this.props.groups.map((item, index) => {
+                                    this.props.semesters.map((item, index) => {
                                         return(
-                                            <option value={`${item.groupName}`} key={`${item.groupName}`}>
+                                            <option value={`${item.ID}`} key={`${item.ID}`}>
                                                 {
-                                                    item.groupName
+                                                    item.ID
                                                 }
                                             </option>
                                         )
