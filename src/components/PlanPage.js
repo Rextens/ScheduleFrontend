@@ -33,6 +33,7 @@ export default class PlanPage extends Component {
         })
 
         axios.get('/getSubjects', {withCredentials: true}).then(result => {
+
             result.data.map((item, index) => {
                 let tempItem = item;
                 tempItem.dndID = this.indexCounting;

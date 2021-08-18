@@ -129,10 +129,23 @@
 {
     margin-top: 10px;
     margin-bottom: 10px;
+    margin-right: 0px !important;
 }
 
 .dropdownMenu
 {
     background-color: rgb(105, 105, 105);         
-    
+}
+
+.dropdownContainer
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.marginForScrollbar
+{
+    margin-left: 14px !important;
 }

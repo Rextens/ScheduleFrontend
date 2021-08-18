@@ -243,6 +243,42 @@ export default class Schedule extends Component {
             }
         }
     }
+
+    getEndTime = (index, isFriday) => {
+        if(isFriday)
+        {
+            let pair = this.state.fridayLessonsHours[this.state.friday[index].subjectIndex].split('.')
+
+            let tempDate = new Date()
+            tempDate.setHours(pair[0])
+            tempDate.setMinutes(pair[1] + this.state.friday[index].subjectLength)
+
+            return (
+                <div>
+                    {
+                        tempDate.getHours() + "." + tempDate.getMinutes()
+                    }
+                </div>
+            )
+        }
+        else
+        {
+            let pair = this.state.saturdayLessonsHours[this.state.saturday[index].subjectIndex].split('.')
+
+            let tempDate = new Date()
+            tempDate.setHours(pair[0])
+            tempDate.setMinutes(pair[1] + this.state.saturday[index].subjectLength)
+
+            return (
+                <div>
+                    {
+                        tempDate.getHours() + "." + tempDate.getMinutes()
+                    }
+                </div>
+            )
+        }
+    }
+
  
     render() {
         if(this.state.redirectToLoginPage)
@@ -278,9 +314,14 @@ export default class Schedule extends Component {
                                         <div style={{transform: `translateY(${this.translateSubjectToProperPosition(item.subjectIndex)}px)`, justifyContent: 'content', flexDirection: 'row', display: 'flex'}}> 
                                         {   
                                             <div style={{transform: `translateX(30px)`}}>
-                                            {
-                                                this.state.fridayLessonsHours[item.subjectIndex]
-                                            }       
+                                                <div>
+                                                    {
+                                                        this.state.fridayLessonsHours[item.subjectIndex]
+                                                    }    
+                                                </div>
+                                                {
+                                                    this.getEndTime(index, true)
+                                                }  
                                             </div>
                                         }     
                                             <div className="Subject" style={{background: item.color}}>
@@ -324,9 +365,14 @@ export default class Schedule extends Component {
                                         <div style={{transform: `translateY(${this.translateSubjectToProperPosition(item.subjectIndex)}px)`, justifyContent: 'content', flexDirection: 'row', display: 'flex'}}> 
                                         {
                                             <div style={{transform: `translateX(30px)`}}>
-                                            {
-                                                this.state.saturdayLessonsHours[item.subjectIndex]
-                                            }       
+                                                <div>
+                                                    {
+                                                        this.state.saturdayLessonsHours[item.subjectIndex]
+                                                    }    
+                                                </div>
+                                                {
+                                                    this.getEndTime(index, false)
+                                                }  
                                             </div>
                                         }
                                             <div className="Subject" style={{background: item.color}}>                                        

@@ -50,7 +50,8 @@ export default class SemestersMenu extends Component {
                         proffesor: result.data[i].proffesor,
                         subjectLength: result.data[i].subjectLength,
                         color: result.data[i].color,
-                        dndID: this.props.planRef.indexCounting
+                        dndID: this.props.planRef.indexCounting,
+                        roomNumber: result.data[i].roomNumber
                     }
 
                     ++this.props.planRef.indexCounting

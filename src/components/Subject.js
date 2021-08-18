@@ -13,11 +13,11 @@ export default class Subject extends Component {
 
     render() {
         return (
-            <Col sm={{span: 4, offset: 0.5}} key={this.props.index} className="Subject">
-                {
-                    this.props.name
-                }
-            </Col>
+            <div>
+                {this.props.name}
+                " "
+                {this.props.roomNumber}
+            </div>
         )
     }
 }

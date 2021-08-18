@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Button, Dropdown, Form } from "react-bootstrap"
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../../cssComponents/PlanPage.css'
+import Subject from '../Subject'
 import axios from 'axios'
 import reactCSS from 'reactcss'
 import { Droppable, Draggable } from 'react-beautiful-dnd';
@@ -26,16 +27,21 @@ export default class SubjectsMenu extends Component {
 
         input.preventDefault()
 
-        let ingredients = input.target[2].value.split(':')
+        
+
+        let ingredients = input.target[3].value.split(':')
 
         let timeInMinutes = parseInt(ingredients[0]) * 60 + parseInt(ingredients[1])
+
+        console.log(input.target[2].value)
 
         let subjectProps = {
             name: input.target[0].value,
             proffesor: input.target[1].value,
             subjectLength: timeInMinutes,
             dndID: this.props.planRef.indexCounting,
-            color: this.state.color
+            color: this.state.color,
+            roomNumber: input.target[2].value
         }
 
         axios.post('/addSubject', subjectProps, {withCredentials: true}).then(result => {
@@ -105,56 +111,61 @@ export default class SubjectsMenu extends Component {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu bsPrefix="dropdownMenu dropdown-menu">
-                        <Form onSubmit={this.addSubject}>
-                            <Form.Group>
-                                <Form.Control bsPrefix="dataInput" placeholder="Subject Name"></Form.Control>
-                            </Form.Group>
+                        <div className="dropdownContainer">
+                            <Form onSubmit={this.addSubject}>
+                                <Form.Group>
+                                    <Form.Control bsPrefix="dataInput" placeholder="Subject Name"></Form.Control>
+                                </Form.Group>
 
-                            <Form.Group>
-                                <Form.Control bsPrefix="dataInput" placeholder="Proffesor"></Form.Control>
-                            </Form.Group>
+                                <Form.Group>
+                                    <Form.Control bsPrefix="dataInput" placeholder="Proffesor"></Form.Control>
+                                </Form.Group>
 
-                            <div style={ styles.swatch } onClick={ this.hideColorPicker } className="bhg">
-                                <div style={ styles.color } />
+                                <Form.Group>
+                                    <Form.Control bsPrefix="dataInput" placeholder="RoomNumber"></Form.Control>
+                                </Form.Group>
+
+                                <div style={ styles.swatch } onClick={ this.hideColorPicker } className="bhg">
+                                    <div style={ styles.color } />
+                                </div>
+                                { 
+                                    this.state.displayColorPicker ? <div style={ styles.popover }>
+                                    <div style={ styles.cover } onClick={ this.handleClose }/>
+                                    <SketchPicker color={this.state.color} onChange={this.onColorChange}/>
+                                    </div> : null 
+                                }
+
+
+                                <TimeInput initTime='01:30'/>
+                                <div className="dropdownContainer">
+                                    <Button className="toggleButton marginsForSubjectButton" type="sumbmit">Dodaj przedmiot!</Button>
+                                </div>
+                            </Form>
+
+                                <div className="marginForScrollbar">
+                                    <Droppable droppableId="subjects">
+                                        {(provided) => (
+                                            <div className="subjects" id="subjectsMenuList" {...provided.droppableProps} ref={provided.innerRef}>
+                                                {
+                                                    this.props.subjects.map(({dndID, name, color, roomNumber}, index) => {           
+                                                        return (
+                                                            <Draggable key={`${dndID}`} draggableId={`${dndID}`} index={index} >
+                                                                {
+                                                                (provided) => (
+                                                                    <div className="deansSubject" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={this.props.planRef.getItemStyle(color, provided.draggableProps.style)}>
+                                                                        <Subject name={name} roomNumber={roomNumber}/>                                                                        
+                                                                    </div>
+                                                                )}
+                                                            </Draggable> 
+                                                            )
+                                                        })
+                                                    }
+                                                {provided.placeholder}                           
+                                            </div>
+                                        )}
+                                    </Droppable>
+                                </div>
                             </div>
-                            { 
-                                this.state.displayColorPicker ? <div style={ styles.popover }>
-                                <div style={ styles.cover } onClick={ this.handleClose }/>
-                                <SketchPicker color={this.state.color} onChange={this.onColorChange}/>
-                                </div> : null 
-                            }
-
-
-                            <TimeInput initTime='01:30'/>
-
-                            <Button className="toggleButton marginsForSubjectButton" type="sumbmit">Dodaj przedmiot!</Button>
-                        </Form>
-
-                            <Droppable droppableId="subjects">
-                                {(provided) => (
-                                    <div className="subjects" id="subjectsMenuList" {...provided.droppableProps} ref={provided.innerRef}>
-                                        {
-                                            this.props.subjects.map(({dndID, name, color}, index) => {           
-                                                return (
-                                                    <Draggable key={`${dndID}`} draggableId={`${dndID}`} index={index} >
-                                                        {
-                                                        (provided) => (
-                                                            <div className="deansSubject" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={this.props.planRef.getItemStyle(color, provided.draggableProps.style)}>
-                                                                <div>
-                                                                    {
-                                                                        name
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                        )}
-                                                    </Draggable> 
-                                                    )
-                                                })
-                                            }
-                                        {provided.placeholder}                           
-                                    </div>
-                                )}
-                            </Droppable>
                     </Dropdown.Menu>
                 </Dropdown>
             )

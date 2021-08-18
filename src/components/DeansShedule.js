@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { Component } from 'react'
 import { Draggable, Droppable } from 'react-beautiful-dnd'
 import { Col, Row, Button } from 'react-bootstrap'
+import Subject from './Subject'
 
 export default class DeansShedule extends Component {
     
@@ -10,6 +11,8 @@ export default class DeansShedule extends Component {
             semester: this.props.planRef.state.chosenSemester,
             group: this.props.planRef.state.chosenGroup
         }
+
+        console.log(semesterAndGroup)
 
         axios.post('/loadSubjectsForDean', semesterAndGroup, {withCredentials: true}).then(result => {
             console.log(result)
@@ -50,16 +53,12 @@ export default class DeansShedule extends Component {
                             {(provided) => (
                                 <div className="friday SubjectsList" {...provided.droppableProps} ref={provided.innerRef}>
                                     {
-                                        this.props.friday.map(({dndID, name, color}, index) => {
+                                        this.props.friday.map(({dndID, name, color, roomNumber}, index) => {
                                             return (
                                                 <Draggable key={`${dndID}`} draggableId={`${dndID}`} index={index}>
                                                     {(provided) => (
                                                         <div className="deansSubject" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={this.props.planRef.getItemStyle(color, provided.draggableProps.style)}>
-                                                            <div>
-                                                                {
-                                                                    name
-                                                                }
-                                                            </div>
+                                                            <Subject name={name} roomNumber={roomNumber}/>
                                                         </div>
                                                     )}
                                                 </Draggable> 
@@ -80,16 +79,12 @@ export default class DeansShedule extends Component {
                             {(provided) => (
                                 <div className="saturday SubjectsList" {...provided.droppableProps} ref={provided.innerRef}>
                                     {
-                                        this.props.saturday.map(({dndID, name, color}, index) => {
+                                        this.props.saturday.map(({dndID, name, color, roomNumber}, index) => {
                                             return (
                                                 <Draggable key={`${dndID}`} draggableId={`${dndID}`} index={index}>
                                                     {(provided) => (
                                                         <div className="deansSubject" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={this.props.planRef.getItemStyle(color, provided.draggableProps.style)}>
-                                                            <div>
-                                                                {
-                                                                    name
-                                                                }
-                                                            </div>
+                                                            <Subject name={name} roomNumber={roomNumber}/>
                                                         </div>
                                                     )}
                                                 </Draggable> 
@@ -101,7 +96,7 @@ export default class DeansShedule extends Component {
                             )}
                         </Droppable>
 
-                        <Button onClick={this.addSubjects} bsPrefix="toggleButton" id="addSubjectsButton">Dodaj przedmioty</Button>
+                        <Button onClick={this.addSubjects} bsPrefix="toggleButton" id="addSubjectsButton">Zapisz</Button>
                     </Col>
                 </Row>
         )
