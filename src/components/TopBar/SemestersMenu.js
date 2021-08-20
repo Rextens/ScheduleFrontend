@@ -21,7 +21,8 @@ export default class SemestersMenu extends Component {
 
         let semesterData = {
             startDate: input.target[0].value,
-            endDate: input.target[1].value
+            endDate: input.target[1].value,
+            name: input.target[2].value
         }
 
         axios.post('/addSemester', semesterData, {withCredentials: true}).then(result => {
@@ -86,6 +87,10 @@ export default class SemestersMenu extends Component {
                                 <DatePicker selected={this.state.startDate} onChange={date => this.setState({startDate: date})} dateFormat="yyyy/MM/dd"/>
                                 <DatePicker selected={this.state.endDate} onChange={date => this.setState({endDate: date})} dateFormat="yyyy/MM/dd"/>
 
+                                <Form.Group>
+                                    <Form.Control bsPrefix="dataInput" placeholder="Semester Name"></Form.Control>
+                                </Form.Group>
+
                                 <Button bsPrefix="toggleButton marginsForSubjectButton" type="sumbmit">Dodaj Semestr!</Button>
                             </Form>
 
@@ -95,7 +100,7 @@ export default class SemestersMenu extends Component {
                                         return(
                                             <option value={`${item.ID}`} key={`${item.ID}`}>
                                                 {
-                                                    item.ID
+                                                    item.name
                                                 }
                                             </option>
                                         )

@@ -20,8 +20,9 @@ export default class Schedule extends Component {
            saturdayDate: new Date(),
            fridayNotes: new Map(),
            saturdayNotes: new Map(),
-           fridayLessonsHours: ['16.15', '18.00'],
-           saturdayLessonsHours: ['8.15', '10.00', '12.00', '13.45']
+           fridayLessonsHours: ['16.15', '18.00', '19.45'],
+           saturdayLessonsHours: ['8.15', '10.00', '12.00', '13.45'],
+           weekNumber: 0
         }
 
         this.subjectHeight = 75;
@@ -58,6 +59,8 @@ export default class Schedule extends Component {
                 this.state.redirectToLoginPage = result.data.redirect
                 this.state.userType = result.data.userType
 
+                this.loadTodaysWeekNumber()
+
                 if(this.state.userType == 0)
                 {
                     let todayDate = new Date()
@@ -78,17 +81,18 @@ export default class Schedule extends Component {
                                 proffessor: item.proffesor,
                                 subjectLength: item.subjectLength,
                                 color: item.color,
-                                subjectIndex: item.subjectIndex
+                                subjectIndex: item.subjectIndex,
+                                roomNumber: item.roomNumber
                             }
                             
                             if(item.isFriday)
                             {
-                                lastFridayY = item.subjectIndex * this.subjectHeight + this.subjectHeight + 40;
+                                lastFridayY = item.subjectIndex * (this.subjectHeight + 50) + this.subjectHeight + 40;
                                 tempFriday.push(tempConstruct)
                             }
                             else
                             {
-                                lastSaturdayY = item.subjectIndex * this.subjectHeight + this.subjectHeight + 40;
+                                lastSaturdayY = item.subjectIndex * (this.subjectHeight + 50) + this.subjectHeight + 40;
                                 tempSaturday.push(tempConstruct)
                             }
                         })
@@ -116,7 +120,8 @@ export default class Schedule extends Component {
                                 proffessor: item.proffesor,
                                 subjectLength: item.subjectLength,
                                 color: item.color,
-                                subjectIndex: item.subjectIndex
+                                subjectIndex: item.subjectIndex,
+                                roomNumber: item.roomNumber
                             }
                             
                             if(item.isFriday)
@@ -143,6 +148,17 @@ export default class Schedule extends Component {
         })
     }
 
+    loadTodaysWeekNumber = () => {
+        let body = {
+            date: this.state.fridayDate
+        }
+
+        axios.post('/loadWeekNumber', body, {withCredentials: true}).then(result => {
+            this.setState({weekNumber: result.data.weekNumber})
+            
+        })
+    }
+
     translateSubjectToProperPosition = (itemIndex) => {
         return itemIndex * this.subjectHeight;
     }
@@ -152,6 +168,7 @@ export default class Schedule extends Component {
         this.state.saturdayDate.setDate(this.state.saturdayDate.getDate() - 7)
 
         this.loadNotes();
+        this.loadTodaysWeekNumber()
     }
 
     addDate = () => {
@@ -159,6 +176,7 @@ export default class Schedule extends Component {
         this.state.saturdayDate.setDate(this.state.saturdayDate.getDate() + 7)
 
         this.loadNotes();
+        this.loadTodaysWeekNumber()
     }
 
     loadNotes = () => {
@@ -247,35 +265,41 @@ export default class Schedule extends Component {
     getEndTime = (index, isFriday) => {
         if(isFriday)
         {
-            let pair = this.state.fridayLessonsHours[this.state.friday[index].subjectIndex].split('.')
+            if(this.state.fridayLessonsHours[this.state.friday[index].subjectIndex])
+            {
+                let pair = this.state.fridayLessonsHours[this.state.friday[index].subjectIndex].split('.')
 
-            let tempDate = new Date()
-            tempDate.setHours(pair[0])
-            tempDate.setMinutes(pair[1] + this.state.friday[index].subjectLength)
+                let tempDate = new Date()
+                tempDate.setHours(pair[0])
+                tempDate.setMinutes(pair[1] + this.state.friday[index].subjectLength)
 
-            return (
-                <div>
-                    {
-                        tempDate.getHours() + "." + tempDate.getMinutes()
-                    }
-                </div>
-            )
+                return (
+                    <div>
+                        {
+                            tempDate.getHours() + "." + tempDate.getMinutes()
+                        }
+                    </div>
+                )
+            }
         }
         else
         {
-            let pair = this.state.saturdayLessonsHours[this.state.saturday[index].subjectIndex].split('.')
+            if(this.state.saturdayLessonsHours[this.state.saturday[index].subjectIndex])
+            {
+                let pair = this.state.saturdayLessonsHours[this.state.saturday[index].subjectIndex].split('.')
 
-            let tempDate = new Date()
-            tempDate.setHours(pair[0])
-            tempDate.setMinutes(pair[1] + this.state.saturday[index].subjectLength)
+                let tempDate = new Date()
+                tempDate.setHours(pair[0])
+                tempDate.setMinutes(pair[1] + this.state.saturday[index].subjectLength)
 
-            return (
-                <div>
-                    {
-                        tempDate.getHours() + "." + tempDate.getMinutes()
-                    }
-                </div>
-            )
+                return (
+                    <div>
+                        {
+                            tempDate.getHours() + "." + tempDate.getMinutes()
+                        }
+                    </div>
+                )
+            }
         }
     }
 
@@ -290,11 +314,16 @@ export default class Schedule extends Component {
             return (
                 <Container fluid={true} className="PlanRow" className="Background"> 
                     <Row bsPrefix="chooseDateBar row" noGutters={true}>
-                        <Col xs={{span: 5}} md={{span: 5, offset: 2}}>
+                        <Col xs={{span: 4}} md={{span: 3, offset: 2}}>
                             <Button bsPrefix="changeDatePrevious toggleButton" style={{float: 'left'}} onClick={this.subDate}>Poprzedni</Button> 
                         </Col>
 
-                        <Col xs={{span: 5}} md={{span: 5}}>
+                        <Col xs={{span: 2}}>
+                            Tydzień: 
+                            { " " + this.state.weekNumber }
+                        </Col>
+
+                        <Col xs={{span: 4}} md={{span: 5}}>
                             <Button bsPrefix="changeDateNext toggleButton" style={{float: 'left'}} onClick={this.addDate}>Następny</Button>
                         </Col>
                     </Row>
@@ -328,7 +357,7 @@ export default class Schedule extends Component {
                                                 <Popup trigger={
                                                     <div className="PopupButtonContainer">
                                                         {
-                                                            `${item.name}`
+                                                            item.name + " " + item.roomNumber
                                                         }
                                                         <br/>
                                                         {
@@ -379,7 +408,7 @@ export default class Schedule extends Component {
                                                 <Popup trigger={
                                                     <div className="PopupButtonContainer">
                                                         {
-                                                            item.name
+                                                            item.name + " " + item.roomNumber
                                                         }
                                                         <br/>
                                                         {

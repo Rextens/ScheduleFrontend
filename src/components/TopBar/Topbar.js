@@ -3,6 +3,7 @@ import { Nav, Navbar } from "react-bootstrap"
 import SemestersMenu from './SemestersMenu'
 import SubjectsMenu from './SubjectsMenu'
 import GroupsMenu from './GroupsMenu'
+import WeekNumber from './WeekNumber'
 
 export default class Topbar extends Component {
     constructor(props) {
@@ -18,6 +19,7 @@ export default class Topbar extends Component {
                         <SubjectsMenu userType={this.props.userType} subjects={this.props.subjects} planRef={this.props.planRef}/>
                         <SemestersMenu userType={this.props.userType} planRef={this.props.planRef} semesters={this.props.planRef.state.semesters}/>
                         <GroupsMenu userType={this.props.userType} planRef={this.props.planRef} groups={this.props.planRef.state.groups}/>
+                        <WeekNumber/>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>

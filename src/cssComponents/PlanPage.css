@@ -149,3 +149,14 @@
 {
     margin-left: 14px !important;
 }
+
+.weekNumberForm
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.marginsForWeekButton
+{
+    margin-left: 20px;
+}
