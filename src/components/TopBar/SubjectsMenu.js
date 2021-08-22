@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button, Dropdown, Form } from "react-bootstrap"
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../../cssComponents/PlanPage.css'
-import Subject from '../Subject'
+import DeansSubject from '../DeansSubject'
 import axios from 'axios'
 import reactCSS from 'reactcss'
 import { Droppable, Draggable } from 'react-beautiful-dnd';
@@ -32,8 +32,6 @@ export default class SubjectsMenu extends Component {
         let ingredients = input.target[3].value.split(':')
 
         let timeInMinutes = parseInt(ingredients[0]) * 60 + parseInt(ingredients[1])
-
-        console.log(input.target[2].value)
 
         let subjectProps = {
             name: input.target[0].value,
@@ -116,10 +114,31 @@ export default class SubjectsMenu extends Component {
                                 <Form.Group>
                                     <Form.Control bsPrefix="dataInput" placeholder="Subject Name"></Form.Control>
                                 </Form.Group>
+                                {
+
+        /*                        
 
                                 <Form.Group>
                                     <Form.Control bsPrefix="dataInput" placeholder="Proffesor"></Form.Control>
                                 </Form.Group>
+        */
+                            }
+                                {
+                                    <select>
+                                    {
+                                        this.props.professors.map((item) => {
+                                            return(
+                                                <option value={`${item.userIndex}`} key={`${item.userIndex}`}>
+                                                    {
+                                                        item.userName
+                                                    }
+                                                </option>
+                                            )
+                                            
+                                        })
+                                    }
+                                    </select>
+                                }
 
                                 <Form.Group>
                                     <Form.Control bsPrefix="dataInput" placeholder="RoomNumber"></Form.Control>
@@ -153,7 +172,7 @@ export default class SubjectsMenu extends Component {
                                                                 {
                                                                 (provided) => (
                                                                     <div className="deansSubject" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={this.props.planRef.getItemStyle(color, provided.draggableProps.style)}>
-                                                                        <Subject name={name} roomNumber={roomNumber}/>                                                                        
+                                                                        <DeansSubject name={name} roomNumber={roomNumber}/>                                                                        
                                                                     </div>
                                                                 )}
                                                             </Draggable> 

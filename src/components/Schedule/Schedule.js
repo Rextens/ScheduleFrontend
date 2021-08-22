@@ -3,7 +3,8 @@ import React, { Component } from 'react'
 import { Col, Container, Row, Button, Form } from "react-bootstrap"
 import { Redirect } from "react-router";
 import Popup from 'reactjs-popup'
-import "../cssComponents/SchedulePage.css"
+import Subject from './Subject'
+import "./SchedulePage.css"
 
 export default class Schedule extends Component {
     constructor(props) {
@@ -22,10 +23,10 @@ export default class Schedule extends Component {
            saturdayNotes: new Map(),
            fridayLessonsHours: ['16.15', '18.00', '19.45'],
            saturdayLessonsHours: ['8.15', '10.00', '12.00', '13.45'],
-           weekNumber: 0
+           weekNumber: 0,
         }
 
-        this.subjectHeight = 75;
+        this.subjectHeight = 100;
     }
 
     componentDidMount = () => {
@@ -68,7 +69,9 @@ export default class Schedule extends Component {
                     let today = `${todayDate.getFullYear()}/${todayDate.getMonth()+1}/${todayDate.getDate()}`
     
                     axios.post('/getSubjectsForDate', today, {withCredentials: true}).then(result => {
+
                         console.log(result)
+
                         let tempFriday = []
                         let tempSaturday = []
 
@@ -82,7 +85,9 @@ export default class Schedule extends Component {
                                 subjectLength: item.subjectLength,
                                 color: item.color,
                                 subjectIndex: item.subjectIndex,
-                                roomNumber: item.roomNumber
+                                roomNumber: item.roomNumber,
+                                inScheduleId: item.inScheduleId,
+                                userName: item.userName
                             }
                             
                             if(item.isFriday)
@@ -121,7 +126,9 @@ export default class Schedule extends Component {
                                 subjectLength: item.subjectLength,
                                 color: item.color,
                                 subjectIndex: item.subjectIndex,
-                                roomNumber: item.roomNumber
+                                roomNumber: item.roomNumber,
+                                inScheduleId: item.inScheduleId,
+                                userName: item.userName
                             }
                             
                             if(item.isFriday)
@@ -159,10 +166,6 @@ export default class Schedule extends Component {
         })
     }
 
-    translateSubjectToProperPosition = (itemIndex) => {
-        return itemIndex * this.subjectHeight;
-    }
-
     subDate = () => {
         this.state.fridayDate.setDate(this.state.fridayDate.getDate() - 7)
         this.state.saturdayDate.setDate(this.state.saturdayDate.getDate() - 7)
@@ -188,121 +191,31 @@ export default class Schedule extends Component {
             saturday: this.state.saturdayDate.toJSON().slice(0, 10).replace('T', ' ')
         }
 
-        axios.post('/loadNotes', dates, {withCredentials: true}).then(result => {
 
+        axios.post('/loadNotes', dates, {withCredentials: true}).then(result => {
             result.data.fridayNotes.map((item) => {
-                this.state.fridayNotes.set(item.index, item.note)
+                let temp = {
+                    note: item.note,
+                    changer: item.changer
+                }
+
+                console.log(item)
+
+                this.state.fridayNotes.set(item.inScheduleId, temp)
             })
 
             result.data.saturdayNotes.map((item) => {
-                this.state.saturdayNotes.set(item.index, item.note)
+                let temp = {
+                    note: item.note,
+                    changer: item.changer
+                }
+
+                this.state.saturdayNotes.set(item.inScheduleId, temp)
             })
 
             this.setState({})
         })
     }
-
-    handleProffesorText = (input, checkIsFriday, itemIndexArg) => {
-        input.preventDefault()
-
-        const noteData = {
-            noteText: input.target[0].value,
-            isFriday: checkIsFriday,
-            itemIndex: itemIndexArg
-        }
-
-        if(checkIsFriday)
-        {
-            noteData.chosenDate = this.state.fridayDate.toJSON().slice(0, 10).replace('T', ' ')
-        }
-        else
-        {
-            noteData.chosenDate = this.state.saturdayDate.toJSON().slice(0, 10).replace('T', ' ')
-        }
-
-        axios.post('/addTeacherNote', noteData, {withCredentials: true}, () => {
-
-        })
-    }
-
-    letInput = (isFridayOpened, itemIndex) => {
-        if(this.state.userType == 1)
-        {
-            return (
-                <Form onSubmit={e => this.handleProffesorText(e, isFridayOpened, itemIndex)} style={{width: '100%', height: '100%'}}>
-                    <textarea style={{width: '100%', height: '90%'}} defaultValue={this.state.fridayNotes.get(itemIndex)}/>
-                    
-                    <Button type="sumbmit" style={{bottom: 0}}>Dodaj notatkę</Button>
-                </Form>
-            )
-        }
-        else
-        {
-            
-            if(isFridayOpened)
-            {
-                return (
-                    <div>
-                        {   
-                            this.state.fridayNotes.get(itemIndex)
-                        }
-                    </div>
-                )
-            }
-            else
-            {
-                return (
-                    <div>
-                        {   
-                            this.state.saturdayNotes.get(itemIndex)
-                        }
-                    </div>
-                )
-            }
-        }
-    }
-
-    getEndTime = (index, isFriday) => {
-        if(isFriday)
-        {
-            if(this.state.fridayLessonsHours[this.state.friday[index].subjectIndex])
-            {
-                let pair = this.state.fridayLessonsHours[this.state.friday[index].subjectIndex].split('.')
-
-                let tempDate = new Date()
-                tempDate.setHours(pair[0])
-                tempDate.setMinutes(pair[1] + this.state.friday[index].subjectLength)
-
-                return (
-                    <div>
-                        {
-                            tempDate.getHours() + "." + tempDate.getMinutes()
-                        }
-                    </div>
-                )
-            }
-        }
-        else
-        {
-            if(this.state.saturdayLessonsHours[this.state.saturday[index].subjectIndex])
-            {
-                let pair = this.state.saturdayLessonsHours[this.state.saturday[index].subjectIndex].split('.')
-
-                let tempDate = new Date()
-                tempDate.setHours(pair[0])
-                tempDate.setMinutes(pair[1] + this.state.saturday[index].subjectLength)
-
-                return (
-                    <div>
-                        {
-                            tempDate.getHours() + "." + tempDate.getMinutes()
-                        }
-                    </div>
-                )
-            }
-        }
-    }
-
  
     render() {
         if(this.state.redirectToLoginPage)
@@ -339,42 +252,16 @@ export default class Schedule extends Component {
                             }
                             {
                                 this.state.friday.map((item, index) => {
-                                    return (          
-                                        <div style={{transform: `translateY(${this.translateSubjectToProperPosition(item.subjectIndex)}px)`, justifyContent: 'content', flexDirection: 'row', display: 'flex'}}> 
-                                        {   
-                                            <div style={{transform: `translateX(30px)`}}>
-                                                <div>
-                                                    {
-                                                        this.state.fridayLessonsHours[item.subjectIndex]
-                                                    }    
-                                                </div>
-                                                {
-                                                    this.getEndTime(index, true)
-                                                }  
-                                            </div>
-                                        }     
-                                            <div className="Subject" style={{background: item.color}}>
-                                                <Popup trigger={
-                                                    <div className="PopupButtonContainer">
-                                                        {
-                                                            item.name + " " + item.roomNumber
-                                                        }
-                                                        <br/>
-                                                        {
-                                                            `${item.proffessor}`
-                                                        }
-                                                    </div>} modal>
-                                                    
-                                                    <div className="overlay"/>
-                                                    <div customvalue="abc" className="SubjectPopup">
-                                                        {
-                                                            this.letInput(1, item.subjectIndex)
-                                                        }
-                                                    </div>
-                                                    
-                                                </Popup>
-                                            </div>
-                                        </div>                                        
+                                    return (
+                                        <Subject item={item} 
+                                                day={this.state.friday} 
+                                                index={index} 
+                                                lessonHours={this.state.fridayLessonsHours} 
+                                                notes={this.state.fridayNotes}
+                                                userType={this.state.userType}
+                                                chosenDate={this.state.fridayDate}
+                                                inScheduleId={item.inScheduleId}
+                                        />                                  
                                     )
                                 })
                             }
@@ -391,40 +278,15 @@ export default class Schedule extends Component {
                             {
                                 this.state.saturday.map((item, index) => {
                                     return (
-                                        <div style={{transform: `translateY(${this.translateSubjectToProperPosition(item.subjectIndex)}px)`, justifyContent: 'content', flexDirection: 'row', display: 'flex'}}> 
-                                        {
-                                            <div style={{transform: `translateX(30px)`}}>
-                                                <div>
-                                                    {
-                                                        this.state.saturdayLessonsHours[item.subjectIndex]
-                                                    }    
-                                                </div>
-                                                {
-                                                    this.getEndTime(index, false)
-                                                }  
-                                            </div>
-                                        }
-                                            <div className="Subject" style={{background: item.color}}>                                        
-                                                <Popup trigger={
-                                                    <div className="PopupButtonContainer">
-                                                        {
-                                                            item.name + " " + item.roomNumber
-                                                        }
-                                                        <br/>
-                                                        {
-                                                            `${item.proffessor}`
-                                                        }                              
-                                                    </div>} modal>
-                                                    
-                                                    <div className="overlay"/>
-                                                    <div className="SubjectPopup">
-                                                        {
-                                                            this.letInput(0, item.subjectIndex)
-                                                        }
-                                                    </div>
-                                                </Popup>
-                                            </div>
-                                        </div>
+                                        <Subject item={item} 
+                                                day={this.state.saturday} 
+                                                index={index} 
+                                                lessonHours={this.state.saturdayLessonsHours} 
+                                                notes={this.state.saturdayNotes}
+                                                userType={this.state.userType}
+                                                chosenDate={this.state.saturdayDate}
+                                                inScheduleId={item.inScheduleId}
+                                        />                           
                                     )
                                 })                            
                             }

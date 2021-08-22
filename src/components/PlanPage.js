@@ -21,7 +21,8 @@ export default class PlanPage extends Component {
             semesters: [],
             groups: [],
             chosenSemester: '',
-            chosenGroup: ''
+            chosenGroup: '',
+            professors: []
         }
 
         this.indexCounting = 0;
@@ -30,61 +31,65 @@ export default class PlanPage extends Component {
     componentDidMount = () => {
         axios.get('/isLogged', {withCredentials: true}).then(result => {
             this.setState({redirectToLoginPage: result.data.redirect, userType: result.data.userType})
-        })
+    
+            axios.get('/getProfessor', {withCredentials: true}).then(result2 => {
+                this.setState({professors: result2.data})
+            })
 
-        axios.get('/getSubjects', {withCredentials: true}).then(result => {
+            axios.get('/getSubjects', {withCredentials: true}).then(result2 => {
 
-            result.data.map((item, index) => {
-                let tempItem = item;
-                tempItem.dndID = this.indexCounting;
+                result2.data.map((item, index) => {
+                    let tempItem = item;
+                    tempItem.dndID = this.indexCounting;
 
-                this.setState({
-                    subjects: [...this.state.subjects, item]
-                }, () => {
-                     ++this.indexCounting;
+                    this.setState({
+                        subjects: [...this.state.subjects, item]
+                    }, () => {
+                        ++this.indexCounting;
+                    })
                 })
             })
-        })
 
-        axios.get('/getGroups', {withCredentials: true}).then(result => {
-            this.setState({groups: result.data})
+            axios.get('/getGroups', {withCredentials: true}).then(result2 => {
+                this.setState({groups: result2.data})
 
-            if(result.data.length > 0)
-            {
-                this.setState({chosenGroup: result.data[0].group})
-            }
-        })
-
-        axios.get('/getSemesters', {withCredentials: true}).then(result => {
-            
-            this.setState({semesters: result.data})
-
-            if(result.data.length > 0)
-            {
-                this.setState({chosenSemester: result.data[0].ID})
-            }
-
-            /*
-            if(result.data.length > 0)
-            {
-                this.setState({chosenSemester: result.data[0].groupName}, () => {console.log(this.state.chosenGroup)})
-            }
-            */
-            
-            /*
-            result.data.map((item, index) => {
-
-                let startDate = new Date(item.startDate);
-                let endDate = new Date(item.endDate);
-
-                console.log(`${startDate.getFullYear()}/${startDate.getMonth() + 1}/${startDate.getDate()}`)
-                console.log(`${endDate.getFullYear()}/${endDate.getMonth() + 1}/${endDate.getDate()}`)
-
-                this.setState({
-                    semesters: [...this.state.semesters, item]
-                })
+                if(result2.data.length > 0)
+                {
+                    this.setState({chosenGroup: result2.data[0].group})
+                }
             })
-            */
+
+            axios.get('/getSemesters', {withCredentials: true}).then(result2 => {
+                
+                this.setState({semesters: result2.data})
+
+                if(result2.data.length > 0)
+                {
+                    this.setState({chosenSemester: result2.data[0].ID})
+                }
+
+                /*
+                if(result.data.length > 0)
+                {
+                    this.setState({chosenSemester: result.data[0].groupName}, () => {console.log(this.state.chosenGroup)})
+                }
+                */
+                
+                /*
+                result.data.map((item, index) => {
+
+                    let startDate = new Date(item.startDate);
+                    let endDate = new Date(item.endDate);
+
+                    console.log(`${startDate.getFullYear()}/${startDate.getMonth() + 1}/${startDate.getDate()}`)
+                    console.log(`${endDate.getFullYear()}/${endDate.getMonth() + 1}/${endDate.getDate()}`)
+
+                    this.setState({
+                        semesters: [...this.state.semesters, item]
+                    })
+                })
+                */
+            })
         })
     }
 
@@ -176,7 +181,7 @@ export default class PlanPage extends Component {
         {
             return (
                 <DragDropContext onDragEnd={result => this.onDragEnd(result)}>
-                    <Topbar userType={this.state.userType} subjects={this.state.subjects} planRef={this}/>
+                    <Topbar professors={this.state.professors} userType={this.state.userType} subjects={this.state.subjects} planRef={this}/>
 
                     <Container fluid={true} className="PlanRow" className="Background">
                             

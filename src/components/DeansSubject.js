@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Col } from "react-bootstrap"
 import '../cssComponents/PlanPage.css'
 
-export default class Subject extends Component {
+export default class DeansSubject extends Component {
     constructor(props) {
         super(props)
 

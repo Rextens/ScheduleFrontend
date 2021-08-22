@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { Component } from 'react'
 import { Draggable, Droppable } from 'react-beautiful-dnd'
 import { Col, Row, Button } from 'react-bootstrap'
-import Subject from './Subject'
+import DeansSubject from './DeansSubject'
 
 export default class DeansShedule extends Component {
     
@@ -58,7 +58,7 @@ export default class DeansShedule extends Component {
                                                 <Draggable key={`${dndID}`} draggableId={`${dndID}`} index={index}>
                                                     {(provided) => (
                                                         <div className="deansSubject" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={this.props.planRef.getItemStyle(color, provided.draggableProps.style)}>
-                                                            <Subject name={name} roomNumber={roomNumber}/>
+                                                            <DeansSubject name={name} roomNumber={roomNumber}/>
                                                         </div>
                                                     )}
                                                 </Draggable> 
@@ -84,7 +84,7 @@ export default class DeansShedule extends Component {
                                                 <Draggable key={`${dndID}`} draggableId={`${dndID}`} index={index}>
                                                     {(provided) => (
                                                         <div className="deansSubject" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={this.props.planRef.getItemStyle(color, provided.draggableProps.style)}>
-                                                            <Subject name={name} roomNumber={roomNumber}/>
+                                                            <DeansSubject name={name} roomNumber={roomNumber}/>
                                                         </div>
                                                     )}
                                                 </Draggable> 
