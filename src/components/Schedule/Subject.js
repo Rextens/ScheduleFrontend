@@ -58,7 +58,12 @@ const Subject = (props) =>
     }
 
     const letInput = (itemIndex) => {
-        let temp = props.notes.get(props.inScheduleId)
+        let key = {
+            changer: parseInt(props.item.proffessor),
+            index: props.item.subjectIndex
+        }
+
+        let temp = props.notes.get(JSON.stringify(key))
 
         if(props.userType == 1)
         {

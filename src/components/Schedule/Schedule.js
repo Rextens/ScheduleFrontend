@@ -194,23 +194,31 @@ export default class Schedule extends Component {
 
         axios.post('/loadNotes', dates, {withCredentials: true}).then(result => {
             result.data.fridayNotes.map((item) => {
-                let temp = {
-                    note: item.note,
-                    changer: item.changer
+                let temp = item
+
+                let temp2 = new Date(temp.date)
+
+                let key = {
+                   // date: temp2.toJSON().slice(0, 10).replace('T', ' '),
+                    changer: temp.changer,
+                    index: temp.index
                 }
 
-                console.log(item)
-
-                this.state.fridayNotes.set(item.inScheduleId, temp)
+                this.state.fridayNotes.set(JSON.stringify(key), temp)
             })
 
             result.data.saturdayNotes.map((item) => {
-                let temp = {
-                    note: item.note,
-                    changer: item.changer
+                let temp = item
+
+                let temp2 = new Date(temp.date)
+
+                let key = {
+                   // date: temp2.toJSON().slice(0, 10).replace('T', ' '),
+                    changer: temp.changer,
+                    index: temp.index
                 }
 
-                this.state.saturdayNotes.set(item.inScheduleId, temp)
+                this.state.saturdayNotes.set(JSON.stringify(key), temp)
             })
 
             this.setState({})
