@@ -17,6 +17,13 @@
     box-shadow: 0px 1px rgb(0, 0, 0);
 }
 
+.WeekNumber
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .SubjectContainer
 {
     width: 100%; 

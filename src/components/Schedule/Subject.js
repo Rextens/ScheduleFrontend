@@ -45,11 +45,12 @@ const Subject = (props) =>
     const handleProffesorText = (input, itemIndexArg) => {
         input.preventDefault()
 
+        console.log(props.item.subjectIndex)
+
         const noteData = {
             noteText: input.target[0].value,
-            itemIndex: itemIndexArg,
+            itemIndex: props.item.subjectIndex,
             chosenDate: props.chosenDate.toJSON().slice(0, 10).replace('T', ' '),
-            inScheduleId: props.inScheduleId
         }
 
         axios.post('/addTeacherNote', noteData, {withCredentials: true}, () => {
@@ -80,9 +81,6 @@ const Subject = (props) =>
             return (
                 <div>
                 {   
-                /*
-                    temp && temp.changer === parseInt(props.item.proffessor) ? temp.note : ""
-                */
                     temp ? temp.note : ""
                 }
                 </div>
@@ -116,16 +114,12 @@ const Subject = (props) =>
                         </div>
                         <div className="SubjectPart">
                         {
-                            /*
-                            props.item.roomNumber
-                            */
-
-                            props.inScheduleId  
+                            "Sala: " + props.item.roomNumber
                         }
                         </div>
                         <div>
                         {
-                            `${props.item.userName}`
+                            `Prowadzący: ${props.item.userName}`
                         }
                         </div>
                     </div>} modal>

@@ -115,15 +115,6 @@ export default class SubjectsMenu extends Component {
                                     <Form.Control bsPrefix="dataInput" placeholder="Subject Name"></Form.Control>
                                 </Form.Group>
                                 {
-
-        /*                        
-
-                                <Form.Group>
-                                    <Form.Control bsPrefix="dataInput" placeholder="Proffesor"></Form.Control>
-                                </Form.Group>
-        */
-                            }
-                                {
                                     <select>
                                     {
                                         this.props.professors.map((item) => {

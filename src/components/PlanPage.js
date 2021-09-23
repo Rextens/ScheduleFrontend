@@ -30,6 +30,8 @@ export default class PlanPage extends Component {
 
     componentDidMount = () => {
         axios.get('/isLogged', {withCredentials: true}).then(result => {
+            console.log('dddddddddddddddddddddddd')
+
             this.setState({redirectToLoginPage: result.data.redirect, userType: result.data.userType})
     
             axios.get('/getProfessor', {withCredentials: true}).then(result2 => {
@@ -37,7 +39,6 @@ export default class PlanPage extends Component {
             })
 
             axios.get('/getSubjects', {withCredentials: true}).then(result2 => {
-
                 result2.data.map((item, index) => {
                     let tempItem = item;
                     tempItem.dndID = this.indexCounting;
@@ -55,41 +56,63 @@ export default class PlanPage extends Component {
 
                 if(result2.data.length > 0)
                 {
-                    this.setState({chosenGroup: result2.data[0].group})
-                }
-            })
-
-            axios.get('/getSemesters', {withCredentials: true}).then(result2 => {
+                    this.setState({chosenGroup: result2.data[0].group}, () => {
+                        
+                        axios.get('/getSemesters', {withCredentials: true}).then(result3 => {
                 
-                this.setState({semesters: result2.data})
-
-                if(result2.data.length > 0)
-                {
-                    this.setState({chosenSemester: result2.data[0].ID})
-                }
-
-                /*
-                if(result.data.length > 0)
-                {
-                    this.setState({chosenSemester: result.data[0].groupName}, () => {console.log(this.state.chosenGroup)})
-                }
-                */
-                
-                /*
-                result.data.map((item, index) => {
-
-                    let startDate = new Date(item.startDate);
-                    let endDate = new Date(item.endDate);
-
-                    console.log(`${startDate.getFullYear()}/${startDate.getMonth() + 1}/${startDate.getDate()}`)
-                    console.log(`${endDate.getFullYear()}/${endDate.getMonth() + 1}/${endDate.getDate()}`)
-
-                    this.setState({
-                        semesters: [...this.state.semesters, item]
+                            this.setState({semesters: result3.data})
+            
+                            if(result3.data.length > 0)
+                            {
+                                this.setState({chosenSemester: result3.data[0].ID}, () => {
+                                    this.loadDeansSubjects()
+                                })
+                            }
+                        })
                     })
-                })
-                */
+                }
             })
+        })
+    }
+
+    loadDeansSubjects = () => {
+        const semesterAndGroup = {
+            semester: this.state.chosenSemester,
+            group: this.state.chosenGroup
+        }
+
+        axios.post('/loadSubjectsForDean', semesterAndGroup, {withCredentials: true}).then(result => {
+            let tempFriday = []
+            let tempSaturday = []
+
+            console.log(result.data)
+
+            for(let i = 0; i < result.data.length; ++i)
+            {
+                let tempSubject = {
+                    ID: result.data[i].ID,
+                    name: result.data[i].name,
+                    proffesor: result.data[i].proffesor,
+                    subjectLength: result.data[i].subjectLength,
+                    color: result.data[i].color,
+                    dndID: this.indexCounting,
+                    roomNumber: result.data[i].roomNumber
+                }
+
+                ++this.indexCounting
+
+                if(result.data[i].isFriday)
+                {
+                    tempFriday.push(tempSubject)
+                }
+                else
+                {
+                    tempSaturday.push(tempSubject)
+                }
+            }
+
+            this.setState({friday: tempFriday})
+            this.setState({saturday: tempSaturday})
         })
     }
 

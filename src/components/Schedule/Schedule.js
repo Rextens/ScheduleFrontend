@@ -86,7 +86,6 @@ export default class Schedule extends Component {
                                 color: item.color,
                                 subjectIndex: item.subjectIndex,
                                 roomNumber: item.roomNumber,
-                                inScheduleId: item.inScheduleId,
                                 userName: item.userName
                             }
                             
@@ -127,7 +126,6 @@ export default class Schedule extends Component {
                                 color: item.color,
                                 subjectIndex: item.subjectIndex,
                                 roomNumber: item.roomNumber,
-                                inScheduleId: item.inScheduleId,
                                 userName: item.userName
                             }
                             
@@ -239,9 +237,11 @@ export default class Schedule extends Component {
                             <Button bsPrefix="changeDatePrevious toggleButton" style={{float: 'left'}} onClick={this.subDate}>Poprzedni</Button> 
                         </Col>
 
-                        <Col xs={{span: 2}}>
-                            Tydzień: 
-                            { " " + this.state.weekNumber }
+                        <Col className="WeekNumber" xs={{span: 2}}>
+                            <div>
+                                Tydzień: 
+                                { " " + this.state.weekNumber }
+                            </div>
                         </Col>
 
                         <Col xs={{span: 4}} md={{span: 5}}>
@@ -268,7 +268,6 @@ export default class Schedule extends Component {
                                                 notes={this.state.fridayNotes}
                                                 userType={this.state.userType}
                                                 chosenDate={this.state.fridayDate}
-                                                inScheduleId={item.inScheduleId}
                                         />                                  
                                     )
                                 })
@@ -293,7 +292,6 @@ export default class Schedule extends Component {
                                                 notes={this.state.saturdayNotes}
                                                 userType={this.state.userType}
                                                 chosenDate={this.state.saturdayDate}
-                                                inScheduleId={item.inScheduleId}
                                         />                           
                                     )
                                 })                            
